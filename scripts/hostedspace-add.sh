@@ -2,7 +2,7 @@
 
 usage() {
 	echo "Usage:"
-	echo "  hostedspace-add [name] [options]"
+	echo "  hostedspace-add [options] NAME"
 	echo ""
 	echo "Options:"
 	echo "  -h               Show help."
@@ -18,10 +18,10 @@ getOptions() {
 			usage
 			;;
 		s)
-			echo "With shell."
+			options[0]='-s /bin/bash'
 			;;
 		p)
-			echo "Set the password: $OPTARG"
+			options[1]="-p $OPTARG"
 			;;
 		esac
 	done
@@ -30,16 +30,24 @@ getOptions() {
 }
 
 params=()
+options=(
+	'-s /bin/false'
+)
 
 if [ $# = 0 ]; then
 	usage
-else
-	while [ $# -gt 0 ]; do
-		getOptions $@
-		shift $lastopt
-		params+=($1)
-		shift
-	done
-	echo ${params[*]}
-	#useradd $username
 fi
+
+while [ $# -gt 0 ]; do
+	getOptions $@
+	shift $lastopt
+	params+=($1)
+	shift
+done
+
+if [ -z ${params[0]} ]; then
+	usage
+fi
+
+useradd ${options[*]} ${params[0]}
+exit 0
