@@ -12,7 +12,7 @@ L'hébergement est basé sur un **espace de stockage personnel** sur le serveur,
 
 ## FTP
 
-Le compte FTP est constitué d'un identifiant et d'un mot de passe, il permet d'accéder à votre espace de stockage personnel grâce à des logiciels comme [FileZilla](https://filezilla-project.org/download.php?type=client) (attention l'installeur windows comprend des bundlewares).
+Le compte FTP est constitué d'un **identifiant** et d'un **mot de passe**, il permet d'accéder à votre **espace de stockage personnel** grâce à des logiciels comme [FileZilla](https://filezilla-project.org/download.php?type=client) (attention l'installeur windows comprend des bundlewares).
 
 ### Informations de connexion
 
@@ -24,11 +24,11 @@ Le compte FTP est constitué d'un identifiant et d'un mot de passe, il permet d'
 
 ## Web
 
-Il est possible d'ajouter à la demande des sous domaines de `club1.fr` pointant vers l'un des dossiers présent dans votre espace de stockage pour ansi créer un site web. Les noms des sous-domaines seront à définir ensemble en fonction de leur disponibilité et leur viabilité.
+Il est possible d'ajouter à la demande des **sous-domaines** de `club1.fr` pointant vers **l'un des dossiers** présent dans votre **espace personnel** pour ainsi créer un site web. Les noms des sous-domaines seront à définir ensemble en fonction de leur disponibilité et leur viabilité.
 
 ## MySql
 
-Un accès à MariaDb pourra être ajouté à partir duquel il est possible de créer des bases de données MySql personnelles. L'identifiant et le mot de passe seront identiques à ceux du compte FTP. Une instance de phpMyAdmin est disponnible à l'adresse suivante : <http://club1.fr/phpmyadmin>
+Un accès à MariaDb pourra être ajouté, à partir duquel il est possible de créer des **bases de données MySql personnelles**. L'identifiant et le mot de passe seront identiques à ceux du compte FTP. Une instance de phpMyAdmin est disponnible à l'adresse suivante : <http://club1.fr/phpmyadmin>
 
 ### Informations de connexion
 
@@ -39,18 +39,18 @@ Un accès à MariaDb pourra être ajouté à partir duquel il est possible de cr
 
 ## SSH
 
-L'acces SSH peut s'avérer très utile pour les utilisateurs expérimentés. Il est également créé sur demande et une fois de plus l'identifiant et le mot de passe seront les mêmes que ceux du compte FTP.
+L'acces SSH peut s'avérer très utile pour les **utilisateurs expérimentés**. Il est également créé sur demande et une fois de plus l'identifiant et le mot de passe seront les mêmes que ceux du compte FTP.
 
-Il peut être utilisé pour établir des connection cryptés en SFTP, pour cela il est fortement recommandé de créer une paire de clés RSA à l'aide d'[OpenSSH](https://fr.wikipedia.org/wiki/OpenSSH). Cette suite logicielle s'utilise en ligne de commande, il faut pour celà ouvrir une fenêtre de console. Pour créer une paire de clé RSA on utilise la commande suivante.
+Il peut être utilisé pour établir des connections cryptés en SFTP, pour cela il est fortement recommandé de créer une paire de **clés RSA** à l'aide d'[OpenSSH](https://fr.wikipedia.org/wiki/OpenSSH). Cette suite logicielle s'utilise en ligne de commande, il faut pour celà ouvrir une fenêtre de console. Pour créer une paire de clé RSA on utilise la commande suivante.
 
 ```$
 ssh-keygen
 ```
 
-La commande ci-dessous permet ensuite d'envoyer la partie publique de la clé au serveur pour pouvoir l'utiliser comme moyen d'authentification.
+La commande ci-dessous permet ensuite d'envoyer la partie publique de la clé au serveur pour pouvoir l'utiliser comme moyen d'authentification. (Remplacer `<USER>` par votre identifiant)
 
 ```$
-ssh-copy-id -i ~/.ssh/mykey user@club1.fr
+ssh-copy-id -i ~/.ssh/id_rsa <USER>@club1.fr
 ```
 
 ### Informations de connexion
@@ -63,22 +63,22 @@ ssh-copy-id -i ~/.ssh/mykey user@club1.fr
 
 # Demandes et Incidents
 
-Pour toute demande ou incident, veuillez [créer une _issue_](https://github.com/club-1/hosting/issues) sur github, en préfixant son titre par `[demande]` ou `[incident]` en fonction de la nature du ticket. Si il s'agit d'une demande impersonnelle, merci de vérifier qu'il n'éxiste pas déjà une demande similaire à l'aide de la barre de recherche.
+Pour toute demande ou incident, veuillez [créer une _issue_](https://github.com/club-1/hosting/issues) sur github, en **préfixant** son titre par `[demande]` ou `[incident]` en fonction de la nature du ticket. Si il s'agit d'une demande impersonnelle, merci de **vérifier** qu'il n'éxiste pas déjà une demande similaire à l'aide de la barre de recherche.
 
 
 # Infos sur le serveur
 
-## Matériel et Infrastructure
+## Matériel et infrastructure
 
-Le serveur est localisé en France à Pantin. Il est relié à internet par la fibre avec un [débit montant de 200Mb/s en moyenne](https://www.nperf.com/r/338260996-nDOmVdkc).
+Le serveur est localisé en France à Pantin. Il est relié à internet par fibre optique avec un [débit montant de 200Mb/s en moyenne](https://www.nperf.com/r/338260996-nDOmVdkc).
 
 ## Système d'exploitation
 
-Le serveur tourne sur la dernière version LTS d'_ubuntu server_ (18.04) et est mis à jour régulièrement
+Le serveur tourne sur la dernière version **LTS d'_ubuntu server_ (18.04)** et est mis à jour régulièrement.
 
 ## Logiciels et bibliothèques installés
 
-Un certain nombre de logiels et de bibliothèques sont déjà installés. En voici une liste non-exhaustive :
+Un certain nombre de logiciels et de bibliothèques sont déjà installés. En voici une liste _non-exhaustive_ :
 -   Apache 2.4
 -   MariaDb 10.1
 -   PHP 7.2
@@ -88,10 +88,14 @@ Un certain nombre de logiels et de bibliothèques sont déjà installés. En voi
 -   pip 10.0
 -   npm 6.4
 -   phpMyAdmin 4.6
--   Git 2.17
+-   Git 2.18
 -   ...
 
-Si vous souhaitez qu'un logiciel supplémentaire soit installé, merci de vérifier dans un premier temps qu'il n'est pas déjà installé, puis dans le cas contraire de créer un ticket comme expliqué [ci-dessus](#demandes-et-incidents).
+Si vous souhaitez qu'un logiciel supplémentaire soit installé, merci de **vérifier** dans un premier temps qu'il n'est pas déjà présent, puis, dans le cas contraire, de **créer un ticket** comme expliqué [ci-dessus](#demandes-et-incidents).
+
+## Disponibilité
+
+Afin de garantir un certaine disponibilité, le serveur ainsi que les équipements réseaux sont alimentés par une _UPS_. Cependant, la redondance n'étant pas présente à tous les niveaux, le serveur pourrait être inaccessible pendant de courts laps de temps, par exemple lors d'une mise à jour du noyau. Cela dit, une disponibilité effective **supérieure à 90%** devrait pouvoir être assurée.
 
 # Politique et vie privée
 
