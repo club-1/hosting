@@ -7,21 +7,25 @@ usage() {
 	echo "Options:"
 	echo "  -h               Show help."
 	echo "  -s               With shell."
+	echo "  -m               With MariaDb MySql account."
 	echo "  -p <password>    Set the password."
 	exit 0
 }
 
 getOptions() {
-	while getopts "hsp:" opt; do
+	while getopts "hsmp:" opt; do
 		case $opt in
 		h)
 			usage
 			;;
 		s)
-			options[0]='-s /bin/bash'
+			useradd_options[0]='-s /bin/bash'
+			;;
+		m)
+			mysql=1
 			;;
 		p)
-			options[1]="-p $OPTARG"
+			useradd_options[1]="-p $OPTARG"
 			;;
 		esac
 	done
@@ -29,8 +33,10 @@ getOptions() {
 	OPTIND=1
 }
 
+login=''
+mysql=0
 params=()
-options=(
+useradd_options=(
 	'-s /bin/false'
 )
 
@@ -48,6 +54,10 @@ done
 if [ -z ${params[0]} ]; then
 	usage
 fi
+login=${options[*]}
+useradd $login ${params[0]}
 
-useradd ${options[*]} ${params[0]}
+if [ $mysql = 1 ]; then
+	mysql -u root -e "CREATE USER $login@localhost IDENTIFIED VIA pam"
+fi
 exit 0
