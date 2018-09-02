@@ -18,29 +18,31 @@ usage() {
 optstring="hvsmp:"
 login=''
 useradd_options=(
-	'-s /bin/false'
+	'-s /bin/false' # without shell
+	'-m' # with home directory
+	'-U' # with user default group
 )
 
-optionsExecute() {
-	if [[ -n ${options[s]} ]]; then
-		[[ -n ${options[v]} ]] && echo 'with shell'
-		useradd_options[0]='-s /bin/bash'
-	fi
-	if [[ -n ${options[m]} ]]; then
-		[[ -n ${options[v]} ]] && echo 'with mysql'
-		mysql -u root -e "CREATE USER $login@localhost IDENTIFIED VIA pam"
-	fi
-	if [[ -n ${options[p]} ]]; then
-		[[ -n ${options[v]} ]] && echo "with password: ${options[p]}"
-		useradd_options[1]="-p ${options[p]}"
-	fi
-}
 parse $optstring $@
 [ -z ${params[0]} ] && usage # if only options, show usage
-
-optionsExecute
 login=${params[0]}
-[[ -n ${options[v]} ]] && echo "useradd ${useradd_options[*]} $login"
-useradd ${useradd_options[*]} $login
+
+if [[ -n ${options[s]} ]]; then
+	[[ -n ${options[v]} ]] && echo 'option with shell'
+	useradd_options[0]='-s /bin/bash'
+fi
+if [[ -n ${options[p]} ]]; then
+	[[ -n ${options[v]} ]] && echo "option with password: ${options[p]}"
+	useradd_options+=("-p ${options[p]}")
+fi
+
+useradd_options+=('')
+[[ -n ${options[v]} ]] && echo "useradd ${useradd_options[*]}$login"
+useradd ${useradd_options[*]}$login
+
+if [[ -n ${options[m]} ]]; then
+	[[ -n ${options[v]} ]] && echo "create MySql user $login@localhost identified via PAM"
+	mysql -u root -e "CREATE USER $login@localhost IDENTIFIED VIA pam"
+fi
 
 exit 0
