@@ -1,4 +1,6 @@
 #!/bin/bash
+DIR=$(dirname "$0")
+. "$DIR/functions.sh"
 
 usage() {
 	echo "Usage:"
@@ -6,58 +8,48 @@ usage() {
 	echo ""
 	echo "Options:"
 	echo "  -h               Show help."
+	echo "  -v               Verbose."
 	echo "  -s               With shell."
 	echo "  -m               With MariaDb MySql account."
 	echo "  -p <password>    Set the password."
 	exit 0
 }
 
-getOptions() {
-	while getopts "hsmp:" opt; do
-		case $opt in
-		h)
-			usage
-			;;
-		s)
-			useradd_options[0]='-s /bin/bash'
-			;;
-		m)
-			mysql=1
-			;;
-		p)
-			useradd_options[1]="-p $OPTARG"
-			;;
-		esac
-	done
-	lastopt=$((OPTIND - 1))
-	OPTIND=1
-}
-
-login=''
-mysql=0
 params=()
+optstring="hvsmp:"
+login=''
 useradd_options=(
 	'-s /bin/false'
 )
 
-if [ $# = 0 ]; then
-	usage
-fi
+optionsExecute() {
+	if [[ -n ${options[s]} ]]; then
+		[[ -n ${options[v]} ]] && echo 'with shell'
+		useradd_options[0]='-s /bin/bash'
+	fi
+	if [[ -n ${options[m]} ]]; then
+		[[ -n ${options[v]} ]] && echo 'with mysql'
+		mysql -u root -e "CREATE USER $login@localhost IDENTIFIED VIA pam"
+	fi
+	if [[ -n ${options[p]} ]]; then
+		[[ -n ${options[v]} ]] && echo "with password: ${options[p]}"
+		useradd_options[1]="-p ${options[p]}"
+	fi
+}
+
+[ $# = 0 ] && usage
 
 while [ $# -gt 0 ]; do
-	getOptions $@
+	optionsGet $optstring $@
 	shift $lastopt
 	params+=($1)
 	shift
 done
+[ -z ${params[0]} ] && usage
 
-if [ -z ${params[0]} ]; then
-	usage
-fi
-login=${options[*]}
-useradd $login ${params[0]}
+optionsExecute
+login=${params[0]}
+[[ -n ${options[v]} ]] && echo "useradd ${useradd_options[*]} $login"
+useradd ${useradd_options[*]} $login
 
-if [ $mysql = 1 ]; then
-	mysql -u root -e "CREATE USER $login@localhost IDENTIFIED VIA pam"
-fi
 exit 0

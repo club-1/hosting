@@ -64,7 +64,7 @@ ssh-copy-id -i ~/.ssh/id_rsa <USER>@club1.fr
 
 # Requests and Issues
 
-For any request or incident, please [create an _issue_](https://github.com/club-1/hosting/issues) on github, **prefixing** its title by `[request]` or `[issue]` depending on the nature of the ticket. If this is an impersonal request, please **check** that there is not already a similar request using the search bar.
+For any request or incident, please [create an _issue_](https://github.com/club-1/hosting/issues) on GitHub (you will need to create an account), **prefixing** its title by `[request]` or `[issue]` depending on the nature of the ticket. If this is an impersonal request, please **check** that there is not already a similar request using the search bar.
 
 
 # Server infos
@@ -81,7 +81,7 @@ The server runs the latest **LTS version of _ubuntu server_ (18.04)** and is upd
 
 A significant number of softwares and libraries are already installed. Here is a _non-exhaustive list_ :
 -   Apache 2.4
--   MariaDb 10.1
+-   MariaDb 10.3
 -   PHP 7.2
 -   Python 2.7 & 3.6
 -   NodeJs 8.11
