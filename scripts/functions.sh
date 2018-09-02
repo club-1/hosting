@@ -1,6 +1,20 @@
 #!/bin/bash
 
 declare -A options=()
+declare params=()
+
+parse() {
+	local optstring=$1
+	shift
+	[ $# = 0 ] && usage # if no params, show usage
+
+	while [ $# -gt 0 ]; do
+		optionsGet $optstring $@
+		shift $lastopt
+		params+=($1)
+		shift
+	done
+}
 
 optionsGet() {
 	local optstring=$1

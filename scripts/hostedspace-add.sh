@@ -15,7 +15,6 @@ usage() {
 	exit 0
 }
 
-params=()
 optstring="hvsmp:"
 login=''
 useradd_options=(
@@ -36,16 +35,8 @@ optionsExecute() {
 		useradd_options[1]="-p ${options[p]}"
 	fi
 }
-
-[ $# = 0 ] && usage
-
-while [ $# -gt 0 ]; do
-	optionsGet $optstring $@
-	shift $lastopt
-	params+=($1)
-	shift
-done
-[ -z ${params[0]} ] && usage
+parse $optstring $@
+[ -z ${params[0]} ] && usage # if only options, show usage
 
 optionsExecute
 login=${params[0]}
