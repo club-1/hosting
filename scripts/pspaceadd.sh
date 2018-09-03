@@ -31,18 +31,20 @@ if [[ -n ${options[s]} ]]; then
 	[[ -n ${options[v]} ]] && echo 'option with shell'
 	useradd_options[0]='-s /bin/bash'
 fi
-if [[ -n ${options[p]} ]]; then
-	[[ -n ${options[v]} ]] && echo "option with password: ${options[p]}"
-	useradd_options+=("-p ${options[p]}")
-fi
 
 useradd_options+=('')
 [[ -n ${options[v]} ]] && echo "useradd ${useradd_options[*]}$login"
-useradd ${useradd_options[*]}$login
+sudo useradd ${useradd_options[*]}$login
 
+if [[ -n ${options[p]} ]]; then
+	[[ -n ${options[v]} ]] && echo "option with password: ${options[p]}"
+	echo "$login:${options[p]}" | sudo chpasswd
+else
+	sudo passwd $login
+fi
 if [[ -n ${options[m]} ]]; then
 	[[ -n ${options[v]} ]] && echo "create MySql user $login@localhost identified via PAM"
-	mysql -u root -e "CREATE USER $login@localhost IDENTIFIED VIA pam"
+	sudo mysql -u root -e "CREATE USER $login@localhost IDENTIFIED VIA pam"
 fi
 
 exit 0

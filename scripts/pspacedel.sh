@@ -30,15 +30,15 @@ fi
 
 userdel_options+=('')
 [[ -n ${options[v]} ]] && echo "userdel ${userdel_options[*]}$login"
-userdel ${userdel_options[*]}$login
+sudo userdel ${userdel_options[*]}$login
 
 if [[ -z ${options[g]} ]]; then
 	[[ -n ${options[v]} ]] && echo "delete group '$login'"
-	groupdel $login
+	sudo groupdel $login
 fi
 if [[ -n ${options[m]} ]]; then
 	[[ -n ${options[v]} ]] && echo "delete MySql user $login@localhost"
-	mysql -u root -e "DROP USER IF EXISTS $login@localhost"
+	sudo mysql -u root -e "DROP USER IF EXISTS $login@localhost"
 fi
 
 exit 0
