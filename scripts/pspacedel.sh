@@ -16,7 +16,6 @@ usage() {
 }
 
 optstring="hvrmg"
-login=''
 userdel_options=()
 
 parse $optstring $@
@@ -37,8 +36,7 @@ if [[ -z ${options[g]} ]]; then
 	sudo groupdel $login
 fi
 if [[ -n ${options[m]} ]]; then
-	[[ -n ${options[v]} ]] && echo "delete MySql user $login@localhost"
-	sudo mysql -u root -e "DROP USER IF EXISTS $login@localhost"
+	sqlUserDel
 fi
 
 exit 0

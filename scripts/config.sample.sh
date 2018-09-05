@@ -1,0 +1,5 @@
+declare sld='club1'
+declare tld='fr'
+declare ip='128.78.51.131'
+declare api_key='laclédelapi'
+declare api_user=''

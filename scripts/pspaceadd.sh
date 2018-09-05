@@ -16,7 +16,6 @@ usage() {
 }
 
 optstring="hvsmp:"
-login=''
 useradd_options=(
 	'-s /bin/false' # without shell
 	'-m' # with home directory
@@ -38,13 +37,12 @@ sudo useradd ${useradd_options[*]}$login
 
 if [[ -n ${options[p]} ]]; then
 	[[ -n ${options[v]} ]] && echo "option with password: ${options[p]}"
-	echo "$login:${options[p]}" | sudo chpasswd
+	passwordSet $login ${options[p]}
 else
-	sudo passwd $login
+	passwordSet $login
 fi
 if [[ -n ${options[m]} ]]; then
-	[[ -n ${options[v]} ]] && echo "create MySql user $login@localhost identified via PAM"
-	sudo mysql -u root -e "CREATE USER $login@localhost IDENTIFIED VIA pam"
+	sqlUserAdd
 fi
 
 exit 0
