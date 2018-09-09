@@ -1,5 +1,5 @@
 #!/bin/bash
-DIR=$(dirname "$0")
+DIR=$(dirname "$(readlink -f "$0")")
 . "$DIR/functions.sh"
 
 usage() {
@@ -16,26 +16,15 @@ usage() {
 }
 
 optstring="hvrmg"
-userdel_options=()
 
 parse $optstring $@
 loginGet
 
-if [[ -n ${options[r]} ]]; then
-	verbose 'option remove home directory'
-	userdel_options+=('-r')
-fi
+verbose "userdel $login"
+sudo userdel $login
 
-userdel_options+=('')
-verbose "userdel ${userdel_options[*]}$login"
-sudo userdel ${userdel_options[*]}$login
-
-if [[ -z ${options[g]} ]]; then
-	verbose "delete group '$login'"
-	sudo groupdel $login
-fi
-if [[ -n ${options[m]} ]]; then
-	sqlUserDel
-fi
+[[ -n ${options[r]} ]] && homeDel
+[[ -n ${options[m]} ]] && sqlUserDel
+[[ -z ${options[g]} ]] && groupDel
 
 exit 0

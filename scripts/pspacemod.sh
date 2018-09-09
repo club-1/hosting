@@ -1,5 +1,5 @@
 #!/bin/bash
-DIR=$(dirname "$0")
+DIR=$(dirname "$(readlink -f "$0")")
 . "$DIR/functions.sh"
 
 usage() {
@@ -23,26 +23,19 @@ usage() {
 }
 
 optionsAdd() {
-	if [[ -n ${options[m]} ]]; then
-		sqlUserAdd
-	fi
+	[[ -n ${options[s]} ]] && shellAdd
+	[[ -n ${options[m]} ]] && sqlUserAdd
 }
 
 optionsUpdate() {
-	if [[ -n ${options[p]} ]]; then
-		verbose "option with password"
-		passwordSet $login
-	fi
-	if [[ -n ${options[P]} ]]; then
-		verbose "option with password: ${options[P]}"
-		passwordSet $login ${options[P]}
-	fi
+	[[ -n ${options[p]} ]] && passwordSet $login
+	[[ -n ${options[P]} ]] && passwordSet $login ${options[P]}
+	[[ -n ${options[l]} ]] && loginUpdate $login ${options[l]}
 }
 
 optionsDelete() {
-	if [[ -n ${options[m]} ]]; then
-		sqlUserDel
-	fi
+	[[ -n ${options[s]} ]] && shellDel
+	[[ -n ${options[m]} ]] && sqlUserDel
 }
 
 command=$1

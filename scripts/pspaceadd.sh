@@ -1,5 +1,5 @@
 #!/bin/bash
-DIR=$(dirname "$0")
+DIR=$(dirname "$(readlink -f "$0")")
 . "$DIR/functions.sh"
 
 usage() {
@@ -15,27 +15,15 @@ usage() {
 }
 
 optstring="hvsm"
-useradd_options=(
-	'-s /bin/false' # without shell
-	'-m' # with home directory
-	'-U' # with user default group
-)
 
 parse $optstring $@
 loginGet
 
-if [[ -n ${options[s]} ]]; then
-	verbose 'option with shell'
-	useradd_options[0]='-s /bin/bash'
-fi
-
-useradd_options+=('')
-verbose "useradd ${useradd_options[*]}$login"
-sudo useradd ${useradd_options[*]}$login
+verbose "useradd -mUs /bin/false $login"
+sudo useradd -mUs /bin/false $login # with home directory, default group and without shell
 passwordSet $login
 
-if [[ -n ${options[m]} ]]; then
-	sqlUserAdd
-fi
+[[ -n ${options[s]} ]] && shellAdd
+[[ -n ${options[m]} ]] && sqlUserAdd
 
 exit 0
