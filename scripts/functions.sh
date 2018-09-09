@@ -12,14 +12,14 @@ parse() {
 	[ $# = 0 ] && usage # if no params, show usage
 
 	while [ $# -gt 0 ]; do
-		optionsGet $optstring $@
+		optsGet $optstring $@
 		shift $lastopt
 		params+=($1)
 		shift
 	done
 }
 
-optionsGet() {
+optsGet() {
 	local optstring=$1
 	shift
 	while getopts ":$optstring" opt; do
@@ -44,6 +44,15 @@ optionsGet() {
 	OPTIND=1
 }
 
+loginGet() {
+	[ -z ${params[0]} ] && usage # if only options, show usage
+	login=${params[0]}
+}
+
+verbose() {
+	[[ -n ${options[v]} ]] && echo $*
+}
+
 passwordSet() {
 	login=$1
 	if [ $# -gt 1 ]; then
@@ -55,12 +64,12 @@ passwordSet() {
 }
 
 sqlUserAdd() {
-	[[ -n ${options[v]} ]] && echo "create MySql user $login@localhost identified via PAM"
-	sudo mysql -u root -e "CREATE USER $login@localhost IDENTIFIED VIA pam"
+	verbose "create MySql user $login@localhost identified via PAM"
+	sudo mysql -u root -e "CREATE USER $login@localhost IDENTIFIED VIA pam; GRANT ALL PRIVILEGES ON \`$login\_%\` . * TO '$login'@'localhost';"
 }
 
 sqlUserDel() {
-	[[ -n ${options[v]} ]] && echo "delete MySql user $login@localhost"
+	verbose "delete MySql user $login@localhost"
 	sudo mysql -u root -e "DROP USER IF EXISTS $login@localhost"
 }
 
@@ -68,12 +77,5 @@ subdomainAdd() {
 	if [ -n $1 ]; then
 		subdomain=$1
 		curl -XPOST -d "hostname1=$subdomain.$sld.$tld&address1=$ip&type1=A&sld=$sld&tld=$tld&api_key=$api_key&api_user=$api_user' 'https://api.planethoster.net/reseller-api/save-ph-dns-records"
-	fi
-}
-
-subdomainDel() {
-	if [ -n $1 ]; then
-		subdomain=$1
-		curl -XPOST -d "sld=$subdomain.$sld&tld=$tld&api_key=$api_key&api_user=$api_user' 'https://api.planethoster.net/reseller-api/delete-ph-dns-area"
 	fi
 }
