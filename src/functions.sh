@@ -6,6 +6,10 @@ declare -A options=()
 declare params=()
 declare login=''
 
+tryRoot() {
+	[ "$USER" != 'root' ] && echo 'ERROR: This script must be run as root' >&2 && usage
+}
+
 parse() {
 	local optstring=$1
 	shift
@@ -45,7 +49,7 @@ optsGet() {
 }
 
 verbose() {
-	[[ -n ${options[v]} ]] && echo $*
+	[[ -n ${options[v]} || -z ${options[q]} ]] && echo $*
 }
 
 loginGet() {
@@ -59,40 +63,40 @@ loginUpdate() {
 	groupUpdate $loginnew
 	sqlUserUpdate $loginnew
 	verbose "update UNIX user '$login' into '$loginnew'"
-	sudo usermod -l $loginnew $login
+	usermod -l $loginnew $login
 }
 
 homeDel() {
 	verbose "delete '$login' home directory"
-	sudo rm -f "/home/$login"
+	rm -f "/home/$login"
 }
 
 homeUpdate() {
 	local loginnew=$1
 	verbose "update '/home/$login' into '/home/$loginnew'"
-	sudo mv "/home/$login" "/home/$loginnew"
+	mv "/home/$login" "/home/$loginnew"
 }
 
 groupDel() {
 	verbose "delete group '$login'"
-	sudo groupdel $login
+	groupdel $login
 }
 
 groupUpdate() {
 	local loginnew=$1
 	verbose "update group '$login' into '$loginnew'"
-	sudo groupmod -n $loginnew $login
+	groupmod -n $loginnew $login
 }
 
 passwordSet() {
 	local login=$1
 	if [ $# -gt 1 ]; then
 		password=$2
-		verbose "set password: $password"
-		echo "$login:$password" | sudo chpasswd
+		verbose "set password of '$login': $password"
+		echo "$login:$password" | chpasswd
 	else
-		verbose "set password"
-		sudo passwd $login
+		verbose "set password of '$login'"
+		passwd $login
 	fi
 }
 
@@ -108,17 +112,17 @@ shellDel() {
 
 sqlUserAdd() {
 	verbose "create MySql user '$login@localhost' identified via PAM and grant privileges"
-	sudo mysql -u root -e "CREATE USER $login@localhost IDENTIFIED VIA pam; GRANT ALL PRIVILEGES ON \`$login\_%\` . * TO '$login'@'localhost';"
+	mysql -u root -e "CREATE USER $login@localhost IDENTIFIED VIA pam; GRANT ALL PRIVILEGES ON \`$login\_%\` . * TO '$login'@'localhost';"
 }
 
 sqlUserDel() {
 	verbose "delete MySql user '$login@localhost'"
-	sudo mysql -u root -e "DROP USER IF EXISTS $login@localhost"
+	mysql -u root -e "DROP USER IF EXISTS $login@localhost"
 }
 
 sqlUserUpdate() {
 	local loginnew=$1
-	nbuser=$(sudo mysql -u root -e 'select user from mysql.user' | grep -sw $login | wc -l)
+	nbuser=$(mysql -u root -e 'select user from mysql.user' | grep -sw $login | wc -l)
 }
 
 subdomainAdd() {
@@ -130,7 +134,15 @@ subdomainAdd() {
 }
 
 vhostAdd() {
-	verbose "create virtualhost"
+	if [ -n $1 && -n $2 ]; then
+		local subdomain="$1.$sld.$tld"
+		local subdir="/home/$login/$2"
+		verbose "create virtualhost $subdomain on $subdir"
+		cp "$DIR/../res/vhost-default.conf" "/etc/apache/sites-available/$subdomain"
+		a2ensite $subdomain
+		service apache2 restart
+		certbot --apache -d $subdomain
+	fi
 }
 
 vhostDel() {

@@ -4,24 +4,25 @@ DIR=$(dirname "$(readlink -f "$0")")
 
 usage() {
 	echo "Usage:"
-	echo "  hostedspace-del [options] <login>"
+	echo "  $0 [options] <login>"
 	echo ""
 	echo "Options:"
-	echo "  -h               Show help."
-	echo "  -v               Verbose."
-	echo "  -r               Remove home directory"
-	echo "  -m               Remove MariaDb MySql account."
-	echo "  -g               Keep group."
+	echo "  -h    Show help."
+	echo "  -r    Remove home directory"
+	echo "  -m    Remove MariaDb MySql account."
+	echo "  -g    Keep group."
+	echo "  -q    Quiet."
 	exit 0
 }
 
-optstring="hvrmg"
+optstring="hrmgq"
 
+tryRoot
 parse $optstring $@
 loginGet
 
 verbose "userdel $login"
-sudo userdel $login
+userdel $login
 
 [[ -n ${options[r]} ]] && homeDel
 [[ -n ${options[m]} ]] && sqlUserDel

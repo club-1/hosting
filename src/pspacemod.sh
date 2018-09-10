@@ -4,7 +4,7 @@ DIR=$(dirname "$(readlink -f "$0")")
 
 usage() {
 	echo "Usage:"
-	echo "  hostedspace-add <command> [options] <login>"
+	echo "  $0 <command> [options] <login>"
 	echo ""
 	echo "Commands:"
 	echo "  add"
@@ -13,12 +13,12 @@ usage() {
 	echo ""
 	echo "Options:"
 	echo "  -h               (aud) Show help."
-	echo "  -v               (aud) Verbose."
 	echo "  -s               (a-d) shell access."
 	echo "  -m               (a-d) MariaDb MySql account."
 	echo "  -p               (-u-) password."
 	echo "  -P <password>    (-u-) password."
 	echo "  -l <new_login>   (-u-) login."
+	echo "  -q               (aud) Quiet."
 	exit 0
 }
 
@@ -38,21 +38,22 @@ optionsDelete() {
 	[[ -n ${options[m]} ]] && sqlUserDel
 }
 
+tryRoot
 command=$1
 shift
 case $command in
 add)
-	parse "hvsm" $@
+	parse "hsmq" $@
 	loginGet
 	optionsAdd
 	;;
 update)
-	parse "hvpP:n:" $@
+	parse "hpP:n:q" $@
 	loginGet
 	optionsUpdate
 	;;
 delete)
-	parse "hvsm" $@
+	parse "hsmq" $@
 	loginGet
 	optionsDelete
 	;;
