@@ -4,7 +4,7 @@ DIR=$(dirname "$(readlink -f "$0")")
 
 usage() {
 	echo "Usage:"
-	echo "  $0 <command> [options] <login>"
+	echo "  pspacemod <command> [options] <login>"
 	echo ""
 	echo "Commands:"
 	echo "  add"
