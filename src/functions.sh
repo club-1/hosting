@@ -113,21 +113,24 @@ shellDel() {
 sqlUserAdd() {
 	verbose "create MySql user '$login@localhost' identified via PAM and grant privileges"
 	mysql -u root -e "
-	CREATE USER $login@localhost IDENTIFIED VIA pam;
-	GRANT ALL PRIVILEGES ON \`$login\_%\` . * TO '$login'@'localhost';
-	INSERT INTO phpmyadmin.pma__users (username, usergroup) VALUES ('$login', '$pma_usergroup');"
+		CREATE USER $login@localhost IDENTIFIED VIA pam;
+		GRANT ALL PRIVILEGES ON \`$login\_%\` . * TO '$login'@'localhost';
+		INSERT INTO phpmyadmin.pma__users (username, usergroup) VALUES ('$login', '$pma_usergroup');"
 }
 
 sqlUserDel() {
 	verbose "delete MySql user '$login@localhost'"
 	mysql -u root -e "
-	DROP USER IF EXISTS $login@localhost
-	DELETE FROM phpmyadmin.pma__users WHERE username = '$login'"
+		DROP USER IF EXISTS $login@localhost;
+		DELETE FROM phpmyadmin.pma__users WHERE username = '$login';"
 }
 
 sqlUserUpdate() {
 	local loginnew=$1
-	nbuser=$(mysql -u root -e 'select user from mysql.user' | grep -sw $login | wc -l)
+	# nbuser=$(mysql -u root -e 'select user from mysql.user' | grep -sw $login | wc -l)
+	mysql -u root -e "
+		UPDATE mysql.user SET User = '$loginnew' WHERE Host = 'localhost' AND User = '$login';
+		UPDATE phpmyadmin.pma__users SET username = '$loginnew' WHERE username = '$login';"
 }
 
 subdomainAdd() {
@@ -143,8 +146,8 @@ vhostAdd() {
 		local subdomain="$1.$sld.$tld"
 		local subdir="/home/$login/$2"
 		verbose "create virtualhost $subdomain on $subdir"
-		cp "$DIR/../res/vhost-default.conf" "/etc/apache/sites-available/$subdomain"
-		a2ensite $subdomain
+		sed -e "s/\${subdomain}/$subdomain/" -e "s/\${email}/$email/" -e "s/\${subdir}/$subdir/" "$DIR/../res/vhost-default.conf" >"/etc/apache/sites-available/$subdomain.conf"
+		a2ensite "$subdomain.conf"
 		service apache2 restart
 		certbot --apache -d $subdomain
 	fi
