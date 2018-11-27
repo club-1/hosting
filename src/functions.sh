@@ -10,6 +10,15 @@ tryRoot() {
 	[ "$USER" != 'root' ] && echo 'ERROR: This script must be run as root' >&2 && usage
 }
 
+confirm() {
+	echo $*
+	read -p "continue (y/N)?" choice
+	case "$choice" in
+	y | Y) echo "yes" ;;
+	*) exit 1 ;;
+	esac
+}
+
 parse() {
 	local optstring=$1
 	shift
@@ -135,24 +144,45 @@ sqlUserUpdate() {
 
 subdomainAdd() {
 	if [ -n $1 ]; then
+		local subdomain="$(cut -d : -f1 <<<$1)"
+		local domain=$subdomain.$sld.$tld
+		confirm "create subdomain '$domain'"
+		curl -XPOST -d "hostname1=$subdomain&address1=$ip&type1=A&sld=$sld&tld=$tld&api_key=$api_key&api_user=$api_user" 'https://api.planethoster.net/reseller-api/save-ph-dns-records'
+		vhostAdd $domain
+	fi
+}
+
+subdomainDel() {
+	if [ -n $1 ]; then
 		local subdomain=$1
-		verbose "create subdomain $subdomain.$sld.$tld"
-		curl -XPOST -d "hostname1=$subdomain.$sld.$tld&address1=$ip&type1=A&sld=$sld&tld=$tld&api_key=$api_key&api_user=$api_user' 'https://api.planethoster.net/reseller-api/save-ph-dns-records"
+		vhostDel $1
 	fi
 }
 
 vhostAdd() {
-	if [ -n $1 && -n $2 ]; then
-		local subdomain="$1.$sld.$tld"
-		local subdir="/home/$login/$2"
-		verbose "create virtualhost $subdomain on $subdir"
-		sed -e "s/\${subdomain}/$subdomain/" -e "s/\${email}/$email/" -e "s/\${subdir}/$subdir/" "$DIR/../res/vhost-default.conf" >"/etc/apache/sites-available/$subdomain.conf"
-		a2ensite "$subdomain.conf"
-		service apache2 restart
-		certbot --apache -d $subdomain
+	if [ -n $1 ]; then
+		local domain="$(cut -d : -f1 <<<$1)"
+		local dir="$(cut -d : -f2 <<<$1)"
+		local subdir="/home/$login/$dir"
+		confirm "create virtualhost '$domain' on '$subdir'"
+		sed -e "s/\${domain}/$domain/" -e "s/\${email}/$email/" -e "s/\${subdir}/$subdir/" "$DIR/../res/vhost-default.conf" >"/etc/apache/sites-available/$domain.conf"
+		verbose "create fpm pool for '$domain'"
+		sed -e "s/\${domain}/$domain/" -e "s/\${user}/$login/" "$DIR/../res/fpm-pool.conf" >"/etc/php/$phpversion/fpm/pool.d/$domain.conf"
+		systemctl restart "php$phpversion-fpm"
+		a2ensite "$domain.conf"
+		systemctl reload apache2
+		certbot --apache -d $domain
 	fi
 }
 
 vhostDel() {
-	verbose "delete virtualhost"
+	if [ -n $1 ]; then
+		local domain=$1
+		confirm "delete virtualhost '$domain'"
+		a2dissite $domain
+		rm "/etc/apache/sites-available/$domain.conf"
+		systemctl reload apache2
+		rm "/etc/php/$phpversion/fpm/pool.d/$domain.conf"
+		systemctl restart "php$phpversion-fpm"
+	fi
 }

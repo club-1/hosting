@@ -15,6 +15,8 @@ usage() {
 	echo "  -h               (aud) Show help."
 	echo "  -s               (a-d) shell access."
 	echo "  -m               (a-d) MariaDb MySql account."
+	echo "  -v <host:dir>    (a-d) a virtualhost."
+	echo "  -d <host:dir>    (a-d) a subdomain."
 	echo "  -p               (-u-) password."
 	echo "  -P <password>    (-u-) password."
 	echo "  -l <new_login>   (-u-) login."
@@ -25,6 +27,8 @@ usage() {
 optionsAdd() {
 	[[ -n ${options[s]} ]] && shellAdd
 	[[ -n ${options[m]} ]] && sqlUserAdd
+	[[ -n ${options[v]} ]] && vhostAdd ${options[v]}
+	[[ -n ${options[d]} ]] && subdomainAdd ${options[d]}
 }
 
 optionsUpdate() {
@@ -36,6 +40,8 @@ optionsUpdate() {
 optionsDelete() {
 	[[ -n ${options[s]} ]] && shellDel
 	[[ -n ${options[m]} ]] && sqlUserDel
+	[[ -n ${options[v]} ]] && vhostDel ${options[v]}
+	[[ -n ${options[d]} ]] && subdomainDel ${options[d]}
 }
 
 tryRoot
@@ -43,17 +49,17 @@ command=$1
 shift
 case $command in
 add)
-	parse "hsmq" $@
+	parse "hsmv:d:q" $@
 	loginGet
 	optionsAdd
 	;;
 update)
-	parse "hpP:n:q" $@
+	parse "hpP:l:q" $@
 	loginGet
 	optionsUpdate
 	;;
 delete)
-	parse "hsmq" $@
+	parse "hsmv:d:q" $@
 	loginGet
 	optionsDelete
 	;;
