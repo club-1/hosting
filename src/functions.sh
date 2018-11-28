@@ -165,9 +165,9 @@ vhostAdd() {
 		local dir="$(cut -d : -f2 <<<$1)"
 		local subdir="/home/$login/$dir"
 		confirm "create virtualhost '$domain' on '$subdir'"
-		sed -e "s/\${domain}/$domain/" -e "s/\${email}/$email/" -e "s/\${subdir}/$subdir/" "$DIR/../res/vhost-default.conf" >"/etc/apache2/sites-available/$domain.conf"
+		sed -e "s#\${domain}#$domain#" -e "s#\${email}#$email#" -e "s#\${subdir}#$subdir#" "$DIR/../res/vhost-default.conf" >"/etc/apache2/sites-available/$domain.conf"
 		verbose "create fpm pool for '$domain'"
-		sed -e "s/\${domain}/$domain/" -e "s/\${user}/$login/" "$DIR/../res/fpm-pool.conf" >"/etc/php/$phpversion/fpm/pool.d/$domain.conf"
+		sed -e "s#\${domain}#$domain#" -e "s#\${user}#$login#" "$DIR/../res/fpm-pool.conf" >"/etc/php/$phpversion/fpm/pool.d/$domain.conf"
 		systemctl restart "php$phpversion-fpm"
 		a2ensite "$domain.conf"
 		systemctl reload apache2
