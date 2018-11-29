@@ -7,7 +7,7 @@ declare params=()
 declare login=''
 
 tryRoot() {
-	[ "$USER" != 'root' ] && echo 'ERROR: This script must be run as root' >&2 && usage
+	[ "$USER" != 'root' ] && echo 'ERROR: This script must be run as root' >&2 && exit 2
 }
 
 confirm() {
@@ -183,7 +183,7 @@ vhostDel() {
 		confirm "delete virtualhost '$domain'"
 		a2dissite $domainle
 		a2dissite $domain
-		rm "/ets/apache2/sites-available/$domainle.conf"
+		rm "/etc/apache2/sites-available/$domainle.conf"
 		rm "/etc/apache2/sites-available/$domain.conf"
 		systemctl reload apache2
 		verbose "delete fpm pool for '$domain'"
