@@ -154,8 +154,9 @@ subdomainAdd() {
 
 subdomainDel() {
 	if [ -n $1 ]; then
-		local subdomain=$1
-		vhostDel $1
+		local subdomain="$(cut -d : -f1 <<<$1)"
+		local domain=$subdomain.$sld.$tld
+		vhostDel $domain
 	fi
 }
 
