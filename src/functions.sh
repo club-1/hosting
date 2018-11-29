@@ -178,8 +178,11 @@ vhostAdd() {
 vhostDel() {
 	if [ -n $1 ]; then
 		local domain="$(cut -d : -f1 <<<$1)"
+		local domainle="$domain-le-ssl"
 		confirm "delete virtualhost '$domain'"
+		a2dissite $domainle
 		a2dissite $domain
+		rm "/ets/apache2/sites-available/$domainle.conf"
 		rm "/etc/apache2/sites-available/$domain.conf"
 		systemctl reload apache2
 		verbose "delete fpm pool for '$domain'"
