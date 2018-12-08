@@ -147,8 +147,8 @@ subdomainAdd() {
 		local subdomain="$(cut -d : -f1 <<<$1)"
 		local domain=$subdomain.$sld.$tld
 		confirm "create subdomain '$domain'"
-		curl -XPOST -d "hostname1=$subdomain&address1=$ip&type1=A&sld=$sld&tld=$tld&api_key=$api_key&api_user=$api_user" 'https://api.planethoster.net/reseller-api/save-ph-dns-records'
-		vhostAdd $domain
+		# curl -XPOST -d "hostname1=$subdomain&address1=$ip&type1=A&sld=$sld&tld=$tld&api_key=$api_key&api_user=$api_user" 'https://api.planethoster.net/reseller-api/save-ph-dns-records'
+		vhostAdd "$domain:$(cut -d : -f2 <<<$1)"
 	fi
 }
 
@@ -156,7 +156,7 @@ subdomainDel() {
 	if [ -n $1 ]; then
 		local subdomain="$(cut -d : -f1 <<<$1)"
 		local domain=$subdomain.$sld.$tld
-		vhostDel $domain
+		vhostDel "$domain:$(cut -d : -f2 <<<$1)"
 	fi
 }
 
@@ -179,12 +179,15 @@ vhostAdd() {
 vhostDel() {
 	if [ -n $1 ]; then
 		local domain="$(cut -d : -f1 <<<$1)"
+		local dir="$(cut -d : -f2 <<<$1)"
 		local domainle="$domain-le-ssl"
 		confirm "delete virtualhost '$domain'"
 		a2dissite $domainle
 		a2dissite $domain
 		rm "/etc/apache2/sites-available/$domainle.conf"
 		rm "/etc/apache2/sites-available/$domain.conf"
+		rm "$dir/error.log"
+		rm "$dir/access.log"
 		systemctl reload apache2
 		verbose "delete fpm pool for '$domain'"
 		rm "/etc/php/$phpversion/fpm/pool.d/$domain.conf"
