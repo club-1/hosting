@@ -3,16 +3,18 @@ Ce dépot git a été créé dans le but de **documenter** les possibilités d'h
 
 # Espace Personnel
 
-L'hébergement est basé sur un **espace de stockage personnel** sur le serveur, ainsi disponible à tout moment via internet. Différents services peuvent y être adjoints :
+L'hébergement est basé sur un compte d'utilisateur composé d'un identifiant (`login`) et d'un mot de passe (`password`), donnant accès à un **espace de stockage personnel** sur le serveur, ainsi disponible à tout moment via internet. Différents services peuvent y être adjoints :
 
 -   un simple compte [FTP](#ftp) (c'est le minimum)
 -   des sites [Web](#web)
 -   des bases de données [MySql](#mysql)
 -   un accès [SSH](#ssh) au serveur
 
+Tous ces services sont reliés à votre compte, ils utilisent donc tous le même `login` et `password`.
+
 ## FTP
 
-Le compte FTP est constitué d'un **identifiant** et d'un **mot de passe**, il permet d'accéder à votre **espace de stockage personnel** grâce à des logiciels comme [FileZilla](https://filezilla-project.org/download.php?type=client) (attention l'installeur windows comprend des bundlewares).
+Le compte FTP permet d'accéder à votre **espace de stockage personnel** grâce à des logiciels comme [FileZilla](https://filezilla-project.org/download.php?type=client) (attention l'installeur windows comprend des bundlewares).
 
 ### Informations de connexion
 
@@ -28,7 +30,7 @@ Il est possible d'ajouter à la demande des **sous-domaines** de `club1.fr` poin
 
 ## MySql
 
-Un accès à MariaDb pourra être ajouté, à partir duquel il est possible de créer des **bases de données MySql personnelles**. L'identifiant et le mot de passe seront identiques à ceux du compte FTP. Une instance de phpMyAdmin est disponnible à l'adresse suivante : <http://club1.fr/phpmyadmin>
+Un accès à MariaDb pourra être ajouté, à partir duquel il est possible de créer des **bases de données MySql personnelles**. Une instance de phpMyAdmin est disponnible à l'adresse suivante : <http://club1.fr/phpmyadmin>
 
 ### Informations de connexion
 
@@ -39,7 +41,7 @@ Un accès à MariaDb pourra être ajouté, à partir duquel il est possible de c
 
 ## SSH
 
-L'acces SSH peut s'avérer très utile pour les **utilisateurs expérimentés**. Il est également créé sur demande et une fois de plus l'identifiant et le mot de passe seront les mêmes que ceux du compte FTP.
+L'acces SSH peut s'avérer très utile pour les **utilisateurs expérimentés**. Il est également créé sur demande.
 
 Il peut être utilisé pour établir des connections cryptés en SFTP, pour cela il est fortement recommandé de créer une paire de **clés RSA** à l'aide d'[OpenSSH](https://fr.wikipedia.org/wiki/OpenSSH). Cette suite logicielle s'utilise en ligne de commande, il faut pour celà ouvrir une fenêtre de console. Pour créer une paire de clé RSA on utilise la commande suivante.
 

@@ -3,17 +3,18 @@ This git repository has been created in order to **document** the hosting possib
 
 # Personnal Space
 
-The hosting is based on a **personnal storage space** on the server, which is accessible at any time through internet. Several services can be added to it:
+The hosting is based on a user account composed of a `login`and a `password`, giving access to a **personnal storage space** on the server, which is accessible at any time through internet. Several services can be added to it:
 
 -   a simple [FTP](#ftp) account (the minimal option)
 -   some [websites](#web)
 -   [MySql](#mysql) databases
 -   [SSH](#ssh) access to the server
 
+All of this services are linked to your account so they all use the same `login`and `password`.
 
 ## FTP
 
-The FTP account consists of a **login** and a **password**, it provides access to your **personnal storage space** thanks to softwares like [FileZilla](https://filezilla-project.org/download.php?type=client) (beware the windows installer includes bundlewares).
+The FTP account provides access to your **personnal storage space** thanks to softwares like [FileZilla](https://filezilla-project.org/download.php?type=client) (beware the windows installer includes bundlewares).
 
 ### Connection informations
 
@@ -29,7 +30,7 @@ It is possible to add, on demand, `club1.fr` **sub-domains** pointing to one of 
 
 ## MySql
 
-An access to MariaDb could be added, from which it is possible to create **personnal MySql databases**. The login and password will be the same as the FTP account's ones. A phpMyAdmin instance is accessible at the following address: <http://club1.fr/phpmyadmin>
+An access to MariaDb could be added, from which it is possible to create **personnal MySql databases**. A phpMyAdmin instance is accessible at the following address: <http://club1.fr/phpmyadmin>
 
 ### Connection informations
 
@@ -40,7 +41,7 @@ An access to MariaDb could be added, from which it is possible to create **perso
 
 ## SSH
 
-An SSH acces can be very useful for **advenced users**. It is created on demand too, and once again the login and password are the same as the FTP account's ones.
+An SSH acces can be very useful for **advenced users**. It is created on demand too.
 
 It can be used to establish encrypted SFTP connections, for that it is strongly recommended to create a **RSA key pair** using [OpenSSH](https://fr.wikipedia.org/wiki/OpenSSH). This software suite is used in command line, it is necessary to open a console window. To create a RSA kay pair we use the following command
 
