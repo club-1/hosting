@@ -172,7 +172,9 @@ vhostAdd() {
 		systemctl restart "php$phpversion-fpm"
 		a2ensite "$domain.conf"
 		systemctl reload apache2
-		certbot --apache -d $domain
+		certbot -n --apache -d $domain
+		sed -e "s#\${domain}#$domain#" -e "s#\${email}#$email#" "$DIR/../res/vhost-redirect.conf" >"/etc/apache2/sites-available/$domain.conf"
+		systemctl reload apache2
 	fi
 }
 
