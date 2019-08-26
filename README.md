@@ -92,6 +92,8 @@ Un certain nombre de logiciels et de bibliothèques sont déjà installés. En v
 -   phpMyAdmin 4.6
 -   Git 2.18
 -   ...
+-   ffmpeg (2019-08-26)
+-   beets (2018-08-29)
 
 Si vous souhaitez qu'un logiciel supplémentaire soit installé, merci de **vérifier** dans un premier temps qu'il n'est pas déjà présent, puis, dans le cas contraire, de **créer un ticket** comme expliqué [ci-dessus](#demandes-et-incidents).
 
