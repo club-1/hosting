@@ -1,86 +1,86 @@
-Ce dépot git a été créé dans le but de **documenter** les possibilités d'hébergement sur le serveur CLUB1 et d'en **gérer les demandes et incidents**.
+This git repository has been created in order to **document** the hosting possibilities on the CLUB1 server and to **manage the requests and issues**.
 
 
-# Espace Personnel
+# Personnal Space
 
-L'hébergement est basé sur un compte d'utilisateur composé d'un identifiant (`login`) et d'un mot de passe (`password`), donnant accès à un **espace de stockage personnel** sur le serveur, ainsi disponible à tout moment via internet. Différents services peuvent y être adjoints :
+The hosting is based on a user account composed of a `login`and a `password`, giving access to a **personnal storage space** on the server, which is accessible at any time through internet. Several services can be added to it:
 
--   un simple compte [FTP](#ftp) (c'est le minimum)
--   des sites [Web](#web)
--   des bases de données [MySql](#mysql)
--   un accès [SSH](#ssh) au serveur
+-   a simple [FTP](#ftp) account (the minimal option)
+-   some [websites](#web)
+-   [MySql](#mysql) databases
+-   [SSH](#ssh) access to the server
 
-Tous ces services sont reliés à votre compte, ils utilisent donc tous le même `login` et `password`.
+All of this services are linked to your account so they all use the same `login`and `password`.
 
 ## FTP
 
-Le compte FTP permet d'accéder à votre **espace de stockage personnel** grâce à des logiciels comme [FileZilla](https://filezilla-project.org/download.php?type=client) (attention l'installeur windows comprend des bundlewares).
+The FTP account provides access to your **personnal storage space** thanks to softwares like [FileZilla](https://filezilla-project.org/download.php?type=client) (beware the windows installer includes bundlewares).
 
-### Informations de connexion
+### Connection informations
 
-| champ            | valeur     |
+| field            | value      |
 | ---------------- | ---------- |
-| hôte             | `club1.fr` |
+| host             | `club1.fr` |
 | port             | `21`       |
-| authentification | `Normale`  |
+| authentication   | `Normal`   |
 
 ## Web
 
-Il est possible d'ajouter à la demande des **sous-domaines** de `club1.fr` pointant vers **l'un des dossiers** présent dans votre **espace personnel** pour ainsi créer un site web. Les noms des sous-domaines seront à définir ensemble en fonction de leur disponibilité et leur viabilité.
+It is possible to add, on demand, `club1.fr` **sub-domains** pointing to one of the **directories** of your **personnal space** in order to create a website. The sub-domains names are to be chosen together according to their availability and viability.
 
 ## MySql
 
-Un accès à MariaDb pourra être ajouté, à partir duquel il est possible de créer des **bases de données MySql personnelles**. Une instance de phpMyAdmin est disponnible à l'adresse suivante : <http://club1.fr/phpmyadmin>
+An access to MariaDb could be added, from which it is possible to create **personnal MySql databases**. A phpMyAdmin instance is accessible at the following address: <http://club1.fr/phpmyadmin>
 
-### Informations de connexion
+### Connection informations
 
-| champ            | valeur      |
+| field            | value       |
 | ---------------- | ----------- |
-| hôte             | `localhost` |
+| host             | `localhost` |
 | port             | `3306`      |
 
 ## SSH
 
-L'acces SSH peut s'avérer très utile pour les **utilisateurs expérimentés**. Il est également créé sur demande.
+An SSH acces can be very useful for **advenced users**. It is created on demand too.
 
-Il peut être utilisé pour établir des connections cryptés en SFTP, pour cela il est fortement recommandé de créer une paire de **clés RSA** à l'aide d'[OpenSSH](https://fr.wikipedia.org/wiki/OpenSSH). Cette suite logicielle s'utilise en ligne de commande, il faut pour celà ouvrir une fenêtre de console. Pour créer une paire de clé RSA on utilise la commande suivante.
+It can be used to establish encrypted SFTP connections, for that it is strongly recommended to create a **RSA key pair** using [OpenSSH](https://fr.wikipedia.org/wiki/OpenSSH). This software suite is used in command line, it is necessary to open a console window. To create a RSA kay pair we use the following command
 
 ```$
 ssh-keygen
 ```
 
-La commande ci-dessous permet ensuite d'envoyer la partie publique de la clé au serveur pour pouvoir l'utiliser comme moyen d'authentification. (Remplacer `<USER>` par votre identifiant)
+The command thereafter then makes it possible to send the public part of the key to the server to be able to use it as an authentication method. (Replace `<USER>` with your login)
 
 ```$
 ssh-copy-id -i ~/.ssh/id_rsa <USER>@club1.fr
 ```
 
-### Informations de connexion
+### Connection informations
 
-| champ            | valeur     |
+| field            | value      |
 | ---------------- | ---------- |
-| hôte             | `club1.fr` |
+| host             | `club1.fr` |
 | port             | `22`       |
 
 
-# Demandes et Incidents
+# Requests and Problems
 
-Pour toute demande ou incident, veuillez [créer une _issue_](https://github.com/club-1/hosting/issues) sur GitHub (vous devrez pour celà créer un compte), en **préfixant** son titre par `[demande]` ou `[incident]` en fonction de la nature du ticket. Si il s'agit d'une demande impersonnelle, merci de **vérifier** qu'il n'éxiste pas déjà une demande similaire à l'aide de la barre de recherche.
+For any request or incident, please [create an _issue_](https://github.com/club-1/hosting/issues) on GitHub (you will need to create an account), choosing between `request` or `problem` depending on the nature of the ticket. If this is an impersonal request, please **check** that there is not already a similar request using the search bar.
 
 
-# Infos sur le serveur
+# Server infos
 
-## Matériel et infrastructure
+## Hardware and infrastructure
 
-Le serveur est localisé en France à Pantin. Il est relié à internet par fibre optique avec un [débit montant de 200Mb/s en moyenne](https://www.nperf.com/r/338260996-nDOmVdkc).
+The server is located in Pantin, France. It is connected to the internet by optical fiber with an [average upload rate of 200Mb/s](https://www.nperf.com/r/338260996-nDOmVdkc).
 
-## Système d'exploitation
+## Operationg system
 
-Le serveur tourne sur la dernière version **LTS d'_ubuntu server_ (18.04)** et est mis à jour régulièrement.
+The server runs the latest **LTS version of _ubuntu server_ (18.04)** and is updated regularly.
 
-## Logiciels et bibliothèques installés
+## Installed software and libraries
 
-Un certain nombre de logiciels et de bibliothèques sont déjà installés. En voici une liste _non-exhaustive_ :
+A significant number of softwares and libraries are already installed. Here is a _non-exhaustive list_ :
 -   Apache 2.4
 -   MariaDb 10.3
 -   PHP 7.2
@@ -95,12 +95,12 @@ Un certain nombre de logiciels et de bibliothèques sont déjà installés. En v
 -   ffmpeg (2019-08-26)
 -   beets (2019-08-26)
 
-Si vous souhaitez qu'un logiciel supplémentaire soit installé, merci de **vérifier** dans un premier temps qu'il n'est pas déjà présent, puis, dans le cas contraire, de **créer un ticket** comme expliqué [ci-dessus](#demandes-et-incidents).
+If you want additional software installed, please **check first** that it is not already present, then, if not, **create a ticket** as [explained above](#requests-and-issues).
 
-## Disponibilité
+## Availability
 
-Afin de garantir un certaine disponibilité, le serveur ainsi que les équipements réseaux sont alimentés par une _UPS_. Cependant, la redondance n'étant pas présente à tous les niveaux, le serveur pourrait être inaccessible pendant de courts laps de temps, par exemple lors d'une mise à jour du noyau. Cela dit, une disponibilité effective **supérieure à 90%** devrait pouvoir être assurée.
+In order to guarantee a certain availability, the server as well as the network equipment are powered by an _UPS_. However, since redundancy is not present at all levels, the server may be inaccessible for short periods of time, for example during a kernel update. That said, an effective availability **above 90%** should be ensured.
 
-# Politique et vie privée
+# Politics and privacy
 
-Aucune des données que vous stockez dans votre espace personnel de sera divulguée ni utilisée à des fins lucratives et ce même sous la menace. Cependant Je ne garantis pas que je n'y jetterai pas un coup d'oeil à l'occasion.
+None of the data you store in your personal space will be divulged or used for profit, even under threat. However, I do not guarantee that I will not take a look at it occasionally.
