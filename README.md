@@ -21,7 +21,7 @@ The FTP account provides access to your **personnal storage space** thanks to so
 | field            | value      |
 | ---------------- | ---------- |
 | host             | `club1.fr` |
-| port             | `21`       |
+| port             | `2121`     |
 | authentication   | `Normal`   |
 
 ## Web
