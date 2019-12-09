@@ -149,6 +149,7 @@ subdomainAdd() {
 		local binddb="/etc/bind/db.$sld.$tld"
 		confirm "create subdomain '$domain'"
 		printf "$subdomain\tIN\tA\t$ip\n" | expand -t 24,32,40 | unexpand -a >> $binddb
+		systemctl restart bind9
 		vhostAdd "$domain:$(cut -d : -f2 <<<$1)"
 	fi
 }
