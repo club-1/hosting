@@ -146,8 +146,9 @@ subdomainAdd() {
 	if [ -n $1 ]; then
 		local subdomain="$(cut -d : -f1 <<<$1)"
 		local domain=$subdomain.$sld.$tld
+		local binddb="/etc/bind/db.$sld.$tld"
 		confirm "create subdomain '$domain'"
-		# curl -XPOST -d "hostname1=$subdomain&address1=$ip&type1=A&sld=$sld&tld=$tld&api_key=$api_key&api_user=$api_user" 'https://api.planethoster.net/reseller-api/save-ph-dns-records'
+		printf "$subdomain\tIN\tA\t$ip\n" | expand -t 24,32,40 | unexpand -a >> $binddb
 		vhostAdd "$domain:$(cut -d : -f2 <<<$1)"
 	fi
 }
