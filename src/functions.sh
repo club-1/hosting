@@ -214,8 +214,8 @@ vhostDel() {
 		a2dissite $domain
 		rm "/etc/apache2/sites-available/$domainle.conf"
 		rm "/etc/apache2/sites-available/$domain.conf"
-		rm "$dir/error.log"
-		rm "$dir/access.log"
+		rm "/home/$login/$dir/error.log"
+		rm "/home/$login/$dir/access.log"
 		systemctl reload apache2
 		phpfpmpoolDel $domain
 	fi
