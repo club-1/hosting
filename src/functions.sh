@@ -192,14 +192,16 @@ vhostAdd() {
 	if [ -n $1 ]; then
 		local domain="$(cut -d : -f1 <<<$1)"
 		local dir="$(cut -d : -f2 <<<$1)"
+		local domainle="$domain-le-ssl"
 		local subdir="/home/$login/$dir"
 		confirm "create virtualhost '$domain' on '$subdir'"
-		sed -e "s#\${domain}#$domain#" -e "s#\${email}#$email#" -e "s#\${subdir}#$subdir#" "$DIR/../res/vhost-default.conf" >"/etc/apache2/sites-available/$domain.conf"
+		sed -e "s#\${domain}#$domain#" -e "s#\${email}#$email#" -e "s#\${subdir}#$subdir#" "$DIR/../res/vhost-default.conf" >"/etc/apache2/sites-available/$domainle.conf"
+		sed -e "s#\${domain}#$domain#" -e "s#\${email}#$email#" "$DIR/../res/vhost-redirect.conf" >"/etc/apache2/sites-available/$domain.conf"
 		phpfpmpoolAdd $domain
+		a2ensite "$domainle.conf"
 		a2ensite "$domain.conf"
 		systemctl reload apache2
 		certbot -n --apache -d $domain
-		sed -e "s#\${domain}#$domain#" -e "s#\${email}#$email#" "$DIR/../res/vhost-redirect.conf" >"/etc/apache2/sites-available/$domain.conf"
 		systemctl reload apache2
 	fi
 }
