@@ -9,3 +9,4 @@ pma_usergroup='low-permission'
 # VirtualHost settings
 email='n.peugnet@free.fr'
 phpversion='7.2'
+redirect_vhost='zzz-redirect'
