@@ -148,7 +148,7 @@ subdomainAdd() {
 		local domain=$subdomain.$sld.$tld
 		local binddb="/etc/bind/db.$sld.$tld"
 		confirm "create subdomain '$domain'"
-		printf "$subdomain\tIN\tA\t$ip\n" | expand -t 24,32,40 | unexpand -a >> $binddb
+		printf "$subdomain\tIN\tA\t$ip;\t$login\n" | expand -t 24,32,40,56 | unexpand -a >> $binddb
 		systemctl restart bind9
 		vhostAdd "$domain:$(cut -d : -f2 <<<$1)"
 	fi
@@ -158,6 +158,10 @@ subdomainDel() {
 	if [ -n $1 ]; then
 		local subdomain="$(cut -d : -f1 <<<$1)"
 		local domain=$subdomain.$sld.$tld
+		local binddb="/etc/bind/db.$sld.$tld"
+		confirm "delete subdomain '$domain'"
+		sed -ni "/^$subdomain	/!p" $binddb
+		systemctl restart bind9
 		vhostDel "$domain:$(cut -d : -f2 <<<$1)"
 	fi
 }
