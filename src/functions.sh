@@ -71,29 +71,29 @@ loginUpdate() {
 	homeUpdate $loginnew
 	groupUpdate $loginnew
 	sqlUserUpdate $loginnew
-	verbose "update UNIX user '$login' into '$loginnew'"
+	verbose "updating UNIX user '$login' into '$loginnew'"
 	usermod -l $loginnew $login
 }
 
 homeDel() {
-	verbose "delete '$login' home directory"
+	verbose "deleting '$login' home directory"
 	rm -f "/home/$login"
 }
 
 homeUpdate() {
 	local loginnew=$1
-	verbose "update '/home/$login' into '/home/$loginnew'"
+	verbose "updating '/home/$login' into '/home/$loginnew'"
 	mv "/home/$login" "/home/$loginnew"
 }
 
 groupDel() {
-	verbose "delete group '$login'"
+	verbose "deleting group '$login'"
 	groupdel $login
 }
 
 groupUpdate() {
 	local loginnew=$1
-	verbose "update group '$login' into '$loginnew'"
+	verbose "updating group '$login' into '$loginnew'"
 	groupmod -n $loginnew $login
 }
 
@@ -101,26 +101,26 @@ passwordSet() {
 	local login=$1
 	if [ $# -gt 1 ]; then
 		password=$2
-		verbose "set password of '$login': $password"
+		verbose "setting password of '$login': $password"
 		echo "$login:$password" | chpasswd
 	else
-		verbose "set password of '$login'"
+		verbose "setting password of '$login'"
 		passwd $login
 	fi
 }
 
 shellAdd() {
-	verbose 'add shell'
+	verbose 'adding shell'
 	usermod -s /bin/bash $login
 }
 
 shellDel() {
-	verbose 'delete shell'
+	verbose 'deleting shell'
 	usermod -s /bin/false $login
 }
 
 sqlUserAdd() {
-	verbose "create MySql user '$login@localhost' identified via PAM and grant privileges"
+	verbose "creating MySql user '$login@localhost' identified via PAM and grant privileges"
 	mysql -u root -e "
 		CREATE USER $login@localhost IDENTIFIED VIA pam;
 		GRANT ALL PRIVILEGES ON \`$login\_%\` . * TO '$login'@'localhost';
@@ -128,7 +128,7 @@ sqlUserAdd() {
 }
 
 sqlUserDel() {
-	verbose "delete MySql user '$login@localhost'"
+	verbose "deleting MySql user '$login@localhost'"
 	mysql -u root -e "
 		DROP USER IF EXISTS $login@localhost;
 		DELETE FROM phpmyadmin.pma__users WHERE username = '$login';"
@@ -169,7 +169,7 @@ subdomainDel() {
 phpfpmpoolAdd() {
 	if [ -n $1 ]; then
 		local domain=$1
-		verbose "create fpm pool for '$domain'"
+		verbose "creating fpm pool for '$domain'"
 		sed -e "s#\${domain}#$domain#" -e "s#\${user}#$login#" "$DIR/../res/fpm-pool.conf" >"/etc/php/$phpversion/fpm/pool.d/$domain.conf"
 		systemctl restart "php$phpversion-fpm"
 	fi
@@ -178,7 +178,7 @@ phpfpmpoolAdd() {
 phpfpmpoolDel() {
 	if [ -n $1 ]; then
 		local domain=$1
-		verbose "delete fpm pool for '$domain'"
+		verbose "deleting fpm pool for '$domain'"
 		rm "/etc/php/$phpversion/fpm/pool.d/$domain.conf"
 		systemctl restart "php$phpversion-fpm"
 	fi
@@ -197,7 +197,15 @@ vhostAdd() {
 		local domain="$(cut -d : -f1 <<<$1)"
 		local dir="$(cut -d : -f2 <<<$1)"
 		local subdir="/home/$login/$dir"
-		confirm "create virtualhost '$domain' on '$subdir'"
+		confirm "creating virtualhost '$domain' on '$subdir'"
+		if [ -f $subdir ]; then
+			verbose "'$subdir' is a file, making a backup"
+			sudo -u $login mv $subdir $subdir.bak
+		fi
+		if [ ! -e $subdir ]; then
+			verbose "'$subdir' does not exist, creating it"
+			sudo -u $login mkdir -p $subdir
+		fi
 		sed -e "s#\${domain}#$domain#" -e "s#\${email}#$email#" -e "s#\${subdir}#$subdir#" "$DIR/../res/vhost-default.conf" >"/etc/apache2/sites-available/$domain.conf"
 		phpfpmpoolAdd $domain
 		a2ensite "$domain.conf"
