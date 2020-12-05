@@ -7,7 +7,7 @@ declare params=()
 declare login=''
 
 tryRoot() {
-	[ "$USER" != 'root' ] && echo 'ERROR: This script must be run as root' >&2 && exit 2
+	[ "$USER" != 'root' ] && echo 'ERROR: This script must be run as root' >&2 && usage
 }
 
 confirm() {
