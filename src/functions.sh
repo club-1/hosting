@@ -198,8 +198,15 @@ filemanagerDel() {
 vhostAdd() {
 	if [ -n $1 ]; then
 		local domain="$(cut -d : -f1 <<<$1)"
+		local top=$(getTopDomain $domain)
 		local dir="$(cut -d : -f2 <<<$1)"
 		local subdir="/home/$login/$dir"
+		if [ ! -z $top ]; then
+			echo this is a subdomain of $top
+			if [ -d /etc/letsencrypt/live/$top ]; then
+				echo will use already existing certificates for this domain
+			fi
+		fi
 		confirm "creating virtualhost '$domain' on '$subdir'"
 		if [ -f $subdir ]; then
 			verbose "'$subdir' is a file, making a backup"
@@ -209,13 +216,19 @@ vhostAdd() {
 			verbose "'$subdir' does not exist, creating it"
 			sudo -u $login mkdir -p $subdir
 		fi
-		sed -e "s#\${domain}#$domain#" -e "s#\${email}#$email#" -e "s#\${subdir}#$subdir#" "$DIR/../res/vhost-default.conf" >"/etc/apache2/sites-available/$domain.conf"
 		phpfpmpoolAdd $domain
-		a2ensite "$domain.conf"
-		a2dissite "$redirect_vhost-le-ssl"
-		certbot -n --apache -d $domain
+		if [ ! -z $top ] && [ -d /etc/letsencrypt/live/$top ]; then
+			sed -e "s#\${domain}#$domain#" -e "s#\${email}#$email#" -e "s#\${subdir}#$subdir#" -e "s#\${top}#$top#" "$DIR/../res/vhost-le-ssl.conf" >"/etc/apache2/sites-available/$domain-le-ssl.conf"
+			a2ensite "$domain-le-ssl.conf"
+		else
+			sed -e "s#\${domain}#$domain#" -e "s#\${email}#$email#" -e "s#\${subdir}#$subdir#" "$DIR/../res/vhost-default.conf" >"/etc/apache2/sites-available/$domain.conf"
+			a2ensite "$domain.conf"
+			a2dissite "$redirect_vhost-le-ssl"
+			certbot -n --apache -d $domain
+			a2ensite "$redirect_vhost-le-ssl"
+		fi
 		sed -e "s#\${domain}#$domain#" -e "s#\${email}#$email#" "$DIR/../res/vhost-redirect.conf" >"/etc/apache2/sites-available/$domain.conf"
-		a2ensite "$redirect_vhost-le-ssl"
+		a2ensite "$domain.conf"
 		systemctl reload apache2
 	fi
 }
@@ -235,4 +248,8 @@ vhostDel() {
 		systemctl reload apache2
 		phpfpmpoolDel $domain
 	fi
+}
+
+getTopDomain() {
+	echo $1 | sed -nE 's/^.+\.(.+\..+)$/\1/p'
 }
