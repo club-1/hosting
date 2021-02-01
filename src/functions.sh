@@ -151,7 +151,7 @@ subdomainAdd() {
 		local date=$(date +%Y%m%d%H)
 		confirm "create subdomain '$domain'"
 		sed -i -e "s/^\(\t*\)[0-9]\{10\}\(\t*;\s*${needle}\)$/\1${date}\2/" $binddb
-		printf "$subdomain\tIN\tA\t$ip\t;\s$login\n" | expand -t 24,32,40,56 | unexpand -a >> $binddb
+		printf "$subdomain\tIN\tA\t$ip\t; $login\n" | expand -t 24,32,40,56 | unexpand -a >> $binddb
 		systemctl restart bind9
 		vhostAdd "$domain:$(cut -d : -f2 <<<$1)"
 	fi
