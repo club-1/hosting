@@ -171,18 +171,19 @@ subdomainDel() {
 
 phpfpmpoolAdd() {
 	if [ -n $1 ]; then
-		local domain=$1
-		verbose "creating fpm pool for '$domain'"
-		sed -e "s#\${domain}#$domain#" -e "s#\${user}#$login#" "$DIR/../res/fpm-pool.conf" >"/etc/php/$phpversion/fpm/pool.d/$domain.conf"
+		local file="/etc/php/$phpversion/fpm/pool.d/$login.conf"
+		verbose "creating fpm pool for '$login'"
+		if [ ! -f $file ]; then
+			sed -e "s#\${user}#$login#" "$DIR/../res/fpm-pool.conf" > $file
+		fi
 		systemctl restart "php$phpversion-fpm"
 	fi
 }
 
 phpfpmpoolDel() {
 	if [ -n $1 ]; then
-		local domain=$1
-		verbose "deleting fpm pool for '$domain'"
-		rm "/etc/php/$phpversion/fpm/pool.d/$domain.conf"
+		verbose "deleting fpm pool for '$login'"
+		rm "/etc/php/$phpversion/fpm/pool.d/$login.conf"
 		systemctl restart "php$phpversion-fpm"
 	fi
 }
@@ -218,10 +219,10 @@ vhostAdd() {
 		fi
 		phpfpmpoolAdd $domain
 		if [ ! -z $top ] && [ -d /etc/letsencrypt/live/$top ]; then
-			sed -e "s#\${domain}#$domain#" -e "s#\${email}#$email#" -e "s#\${subdir}#$subdir#" -e "s#\${top}#$top#" "$DIR/../res/vhost-le-ssl.conf" >"/etc/apache2/sites-available/$domain-le-ssl.conf"
+			sed -e "s#\${domain}#$domain#" -e "s#\${email}#$email#" -e "s#\${subdir}#$subdir#" -e "s#\${user}#$login#" -e "s#\${top}#$top#" "$DIR/../res/vhost-le-ssl.conf" >"/etc/apache2/sites-available/$domain-le-ssl.conf"
 			a2ensite "$domain-le-ssl.conf"
 		else
-			sed -e "s#\${domain}#$domain#" -e "s#\${email}#$email#" -e "s#\${subdir}#$subdir#" "$DIR/../res/vhost-default.conf" >"/etc/apache2/sites-available/$domain.conf"
+			sed -e "s#\${domain}#$domain#" -e "s#\${email}#$email#" -e "s#\${subdir}#$subdir#" -e "s#\${user}#$login#" "$DIR/../res/vhost-default.conf" >"/etc/apache2/sites-available/$domain.conf"
 			a2ensite "$domain.conf"
 			a2dissite "$redirect_vhost-le-ssl"
 			certbot -n --apache -d $domain
@@ -246,7 +247,7 @@ vhostDel() {
 		rm "/home/$login/$dir/error.log"
 		rm "/home/$login/$dir/access.log"
 		systemctl reload apache2
-		phpfpmpoolDel $domain
+#		phpfpmpoolDel $domain
 	fi
 }
 
