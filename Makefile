@@ -50,6 +50,7 @@ uninstall:
 
 $(BINS): bin/%: src/%.sh | bin
 	cp $< $@
+	chmod +x $@
 
 $(ETCS): etc/club1/%.env: | etc/club1
 	cp $*.sample.env $@
