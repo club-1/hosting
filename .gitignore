@@ -1,1 +1,3 @@
-src/config.sh
+config.env
+bin
+etc

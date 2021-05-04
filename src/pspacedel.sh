@@ -1,6 +1,6 @@
 #!/bin/bash
-DIR=$(dirname "$(readlink -f "$0")")
-. "$DIR/functions.sh"
+DIR="${BASH_SOURCE%/*}"
+. "$DIR/../lib/club1/functions.sh"
 
 usage() {
 	echo "Usage:"

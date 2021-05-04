@@ -1,6 +1,12 @@
 #!/bin/bash
-DIR=$(dirname "$(readlink -f "$0")")
-. "$DIR/config.sh"
+DIR="${BASH_SOURCE%/*}"
+
+# Read common vars from config.env
+# the incantation here ensures (by env) that only key=value pairs are present
+# then declare-ing the result puts those vars in our environment
+declare $(env -i `sed $DIR/../../etc/club1/config.env -e '/^#/d'`) > /dev/null
+declare $(env -i `sed /etc/club1/config.env -e '/^#/d' 2> /dev/null`) > /dev/null
+declare $(env -i `sed $HOME/.config/club1/config.env -e '/^#/d' 2> /dev/null`) > /dev/null
 
 declare -A options=()
 declare params=()
