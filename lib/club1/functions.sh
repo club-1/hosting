@@ -180,7 +180,7 @@ phpfpmpoolAdd() {
 		local file="/etc/php/$phpversion/fpm/pool.d/$login.conf"
 		verbose "creating fpm pool for '$login'"
 		if [ ! -f $file ]; then
-			sed -e "s#\${user}#$login#" "$DIR/../res/fpm-pool.conf" > $file
+			sed -e "s#\${user}#$login#" "$DIR/../../share/club1/fpm-pool.conf" > $file
 		fi
 		systemctl restart "php$phpversion-fpm"
 	fi
@@ -224,18 +224,8 @@ vhostAdd() {
 			sudo -u $login mkdir -p $subdir
 		fi
 		phpfpmpoolAdd $domain
-		if [ ! -z $top ] && [ -d /etc/letsencrypt/live/$top ]; then
-			sed -e "s#\${domain}#$domain#" -e "s#\${email}#$email#" -e "s#\${subdir}#$subdir#" -e "s#\${user}#$login#" -e "s#\${top}#$top#" "$DIR/../res/vhost-le-ssl.conf" >"/etc/apache2/sites-available/$domain-le-ssl.conf"
-			a2ensite "$domain-le-ssl.conf"
-		else
-			sed -e "s#\${domain}#$domain#" -e "s#\${email}#$email#" -e "s#\${subdir}#$subdir#" -e "s#\${user}#$login#" "$DIR/../res/vhost-default.conf" >"/etc/apache2/sites-available/$domain.conf"
-			a2ensite "$domain.conf"
-			a2dissite "$redirect_vhost-le-ssl"
-			certbot -n --apache -d $domain
-			a2ensite "$redirect_vhost-le-ssl"
-		fi
-		sed -e "s#\${domain}#$domain#" -e "s#\${email}#$email#" "$DIR/../res/vhost-redirect.conf" >"/etc/apache2/sites-available/$domain.conf"
-		a2ensite "$domain.conf"
+		sed -e "s#\${domain}#$domain#" -e "s#\${email}#$email#" -e "s#\${subdir}#$subdir#" -e "s#\${user}#$login#" "$DIR/../../share/club1/vhost-default.conf" >"/etc/apache2/sites-available/$domain.conf"
+		a2ensite -q "$domain.conf"
 		systemctl reload apache2
 	fi
 }
