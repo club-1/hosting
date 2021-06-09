@@ -67,7 +67,7 @@ demand.
 
 In this section [OpenSSH](https://en.wikipedia.org/wiki/OpenSSH) will be
 used. As this software suite is in command-line, it is necessary to open a
-console window.
+terminal window (powershell on windows)
 
 ### First connection
 
@@ -86,7 +86,7 @@ This is not ideal as the user must manually compare the fingerprint of the
 warning with the one provided by the admin. So instead it is preferable to add
 the key before the first connection using the following command:
 
-    echo club1.fr,128.78.51.131 ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBBC64tjZ1WjxMMoGeWiipApfCAaQe1sP/YFoNWYtckXV7XfFFKsBf70SHUw/oPjVZ1sdwcIL8wsH8Q00oYMIv7M= >> .ssh/known_hosts
+    echo club1.fr,128.78.51.131 ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBBC64tjZ1WjxMMoGeWiipApfCAaQe1sP/YFoNWYtckXV7XfFFKsBf70SHUw/oPjVZ1sdwcIL8wsH8Q00oYMIv7M= >> ~/.ssh/known_hosts
 
 If for some reason the manual comparison is preferred, the fingerprint in the above example is indeed the fingerprint of club1.fr.
 
