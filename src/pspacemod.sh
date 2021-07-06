@@ -15,7 +15,7 @@ usage() {
 	echo "  -h               (aud) Show help."
 	echo "  -s               (a-d) shell access."
 	echo "  -m               (a-d) MariaDb MySql account."
-	echo "  -f               (a-d) file manager."
+	echo "  -f               (a-d) fpm pool."
 	echo "  -v <host:dir>    (a-d) a virtualhost."
 	echo "  -d <host:dir>    (a-d) a subdomain."
 	echo "  -p               (-u-) password."
@@ -28,7 +28,7 @@ usage() {
 optionsAdd() {
 	[[ -n ${options[s]} ]] && shellAdd
 	[[ -n ${options[m]} ]] && sqlUserAdd
-	[[ -n ${options[f]} ]] && filemanagerAdd
+	[[ -n ${options[f]} ]] && phpfpmpoolAdd
 	[[ -n ${options[v]} ]] && vhostAdd ${options[v]}
 	[[ -n ${options[d]} ]] && subdomainAdd ${options[d]}
 }
@@ -42,7 +42,7 @@ optionsUpdate() {
 optionsDelete() {
 	[[ -n ${options[s]} ]] && shellDel
 	[[ -n ${options[m]} ]] && sqlUserDel
-	[[ -n ${options[f]} ]] && filemanagerDel
+	[[ -n ${options[f]} ]] && phpfpmpoolDel
 	[[ -n ${options[v]} ]] && vhostDel ${options[v]}
 	[[ -n ${options[d]} ]] && subdomainDel ${options[d]}
 }
