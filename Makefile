@@ -9,7 +9,7 @@ SHARE_DIR   := $(DESTDIR)$(PREFIX)/share/club1
 DIRS        := $(BIN_DIR) $(LIB_DIR) $(ETC_DIR) $(SHARE_DIR)
 
 # File lists
-BIN_LIST    := dns-auth dns-cleanup pspaceadd pspacedel pspacemod updateapache updatephp
+BIN_LIST    := dns-auth dns-cleanup pspaceadd pspacedel pspacemod update-apache update-php update-element
 LIB_LIST    := functions
 ETC_LIST    := config
 
