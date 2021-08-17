@@ -24,7 +24,7 @@ then
 	rm -rf $dir
 	tar -xf $tar
 	cp config.json $dir/
-	ln -s $dir current
+	ln -fs $dir current
 	if [ $cur != $dir ]
 	then
 		rm -rf $cur
