@@ -12,6 +12,8 @@ declare -A options=()
 declare params=()
 declare login=''
 
+### Generic functions
+
 tryRoot() {
 	[ "$USER" != 'root' ] && echo 'ERROR: This script must be run as root' >&2 && usage
 }
@@ -66,6 +68,8 @@ optsGet() {
 verbose() {
 	[[ -n ${options[v]} || -z ${options[q]} ]] && echo $*
 }
+
+### pspace functions
 
 loginGet() {
 	[ -z ${params[0]} ] && usage # if only options, show usage
@@ -250,3 +254,13 @@ vhostDel() {
 getTopDomain() {
 	echo $1 | sed -nE 's/^.+\.(.+\..+)$/\1/p'
 }
+
+
+### Other functions
+
+getLatestGithubRelease() {
+  curl --silent "https://api.github.com/repos/$1/releases/latest" | # Get latest release from GitHub api
+    grep '"tag_name":' |                                            # Get tag line
+    sed -E 's/.*"([^"]+)".*/\1/'                                    # Pluck JSON value
+}
+

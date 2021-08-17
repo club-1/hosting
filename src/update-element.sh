@@ -1,15 +1,12 @@
 #!/bin/bash
+DIR="${BASH_SOURCE%/*}"
+. "$DIR/../lib/club1/functions.sh"
 
-get_latest_release() {
-  curl --silent "https://api.github.com/repos/$1/releases/latest" | # Get latest release from GitHub api
-    grep '"tag_name":' |                                            # Get tag line
-    sed -E 's/.*"([^"]+)".*/\1/'                                    # Pluck JSON value
-}
+# From config
+repo=$element_repo
+cwd=$element_dir
 
-repo=vector-im/element-web
-cwd=/home/nicolas/www/riot.club1.fr
-
-tag=$(get_latest_release $repo)
+tag=$(getLatestGithubRelease $repo)
 dir=element-$tag
 tar=$dir.tar.gz
 asc=$tar.asc
@@ -21,6 +18,7 @@ cur=$(readlink current)
 wget -nv $url/$tar $url/$asc
 if gpg --verify $asc
 then
+	confirm
 	rm -rf $dir
 	tar -xf $tar
 	cp config.json $dir/
