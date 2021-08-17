@@ -18,7 +18,7 @@ url=https://github.com/$repo/releases/download/$tag
 cd $cwd
 cur=$(readlink current)
 
-wget $url/$tar $url/$asc
+wget -nv $url/$tar $url/$asc
 if gpg --verify $asc
 then
 	rm -rf $dir
