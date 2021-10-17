@@ -22,7 +22,7 @@ parse $optstring $@
 loginGet
 
 verbose "userdel $login"
-userdel $login
+ldapdeleteuser $login
 
 [[ -n ${options[r]} ]] && homeDel
 [[ -n ${options[m]} ]] && sqlUserDel

@@ -21,8 +21,10 @@ parse $optstring $@
 loginGet
 
 verbose "useradd -mUs /bin/false $login"
-useradd -mUs /bin/false $login # with home directory, default group and without shell
-passwordSet $login
+nextuid=$(ldapnextuid)
+ldapaddgroup $login $nextuid
+ldapadduser $login $login
+shellDel
 
 [[ -n ${options[s]} ]] && shellAdd
 [[ -n ${options[m]} ]] && sqlUserAdd

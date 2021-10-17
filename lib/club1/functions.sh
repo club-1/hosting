@@ -82,7 +82,7 @@ loginUpdate() {
 	groupUpdate $loginnew
 	sqlUserUpdate $loginnew
 	verbose "updating UNIX user '$login' into '$loginnew'"
-	usermod -l $loginnew $login
+	ldaprenameuser $login $loginnew
 }
 
 homeDel() {
@@ -98,13 +98,13 @@ homeUpdate() {
 
 groupDel() {
 	verbose "deleting group '$login'"
-	groupdel $login
+	ldapdeletegroup $login
 }
 
 groupUpdate() {
 	local loginnew=$1
 	verbose "updating group '$login' into '$loginnew'"
-	groupmod -n $loginnew $login
+	ldaprenamegroup $login $loginnew
 }
 
 passwordSet() {
@@ -121,12 +121,12 @@ passwordSet() {
 
 shellAdd() {
 	verbose 'adding shell'
-	usermod -s /bin/bash $login
+	chsh.ldap -s /bin/bash $login
 }
 
 shellDel() {
 	verbose 'deleting shell'
-	usermod -s /bin/false $login
+	chsh.ldap -s /bin/false $login
 }
 
 sqlUserAdd() {
