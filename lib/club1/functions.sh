@@ -87,7 +87,7 @@ loginUpdate() {
 
 homeDel() {
 	verbose "deleting '$login' home directory"
-	rm -f "/home/$login"
+	rm -rf "/home/$login"
 }
 
 homeUpdate() {
