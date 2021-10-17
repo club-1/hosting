@@ -20,11 +20,10 @@ tryRoot
 parse $optstring $@
 loginGet
 
-verbose "useradd -mUs /bin/false $login"
+verbose "create user $login"
 nextuid=$(ldapnextuid)
 ldapaddgroup $login $nextuid
-ldapadduser $login $login
-shellDel
+ldapadduser $login $login $nextuid
 
 [[ -n ${options[s]} ]] && shellAdd
 [[ -n ${options[m]} ]] && sqlUserAdd
