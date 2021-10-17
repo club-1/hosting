@@ -121,12 +121,16 @@ passwordSet() {
 
 shellAdd() {
 	verbose 'adding shell'
-	chsh.ldap -s /bin/bash $login
+	ldapmodifyuser $login <<< "changetype: modify
+		replace: loginShell
+		loginShell: /bin/bash" > /dev/null
 }
 
 shellDel() {
 	verbose 'deleting shell'
-	chsh.ldap -s /bin/false $login
+	ldapmodifyuser $login <<< "changetype: modify
+		replace: loginShell
+		loginShell: /bin/false" > /dev/null
 }
 
 sqlUserAdd() {
