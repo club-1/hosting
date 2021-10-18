@@ -94,6 +94,9 @@ homeUpdate() {
 	local loginnew=$1
 	verbose "updating '/home/$login' into '/home/$loginnew'"
 	mv "/home/$login" "/home/$loginnew"
+	ldapmodifyuser $login <<< "changetype: modify
+		replace: homeDirectory
+		homeDirectory: /home/$loginnew" > /dev/null
 }
 
 groupDel() {
