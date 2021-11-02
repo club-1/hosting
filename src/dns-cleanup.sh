@@ -11,11 +11,8 @@ ZONE="/etc/bind/db.$CERTBOT_DOMAIN"
 DATE=$(date +%Y%m%d%H)
 
 sed $ZONE -Ei -e "/^$HOST.*$VALIDATION/d"
-perl -i -pe 'BEGIN {chomp ($now=qx/date +%Y%m%d/)};
-/(\d{8})(\d{2})(\s+;\s+serial)/i and do {
-	$serial = ($1 eq $now ? $2+1 : 0);
-	s/\d{8}(\d{2})/sprintf "%8d%02d",$now,$serial/e;
-}' $ZONE
+
+dns-bump $ZONE
 
 if [[ $CERTBOT_REMAINING_CHALLENGES == 0 ]]
 then
