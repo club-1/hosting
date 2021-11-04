@@ -10,12 +10,12 @@ DIRS        := $(BIN_DIR) $(LIB_DIR) $(ETC_DIR) $(SHARE_DIR)
 
 # File lists
 BIN_LIST    := dns-auth dns-bump dns-cleanup pspaceadd pspacedel pspacemod update-apache update-php update-element
-LIB_LIST    := functions
+LIB_LIST    := functions.sh dns-bump.pl
 ETC_LIST    := config
 
 # Files to install
 BINS        := $(patsubst %, bin/%, $(BIN_LIST))
-LIBS        := $(patsubst %, lib/club1/%.sh, $(LIB_LIST))
+LIBS        := $(patsubst %, lib/club1/%, $(LIB_LIST))
 ETCS        := $(patsubst %, etc/club1/%.env, $(ETC_LIST))
 SHARES      := $(wildcard share/club1/*)
 
