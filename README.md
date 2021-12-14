@@ -78,15 +78,15 @@ we have to make sure that we received the correct key during the exchange.
 To solve this problem OpenSSH shows this warning with the fingerprint of the
 received key:
 
->     The authenticity of host 'club1.fr (128.78.51.131)' can't be established.
->     ECDSA key fingerprint is SHA256:EKqAMn8X9z3IQDzffbHAwyU8CDG4fAStlzNQznHfyEY.
+>     The authenticity of host 'club1.fr (***)' can't be established.
+>     ED25519 key fingerprint is SHA256:t4m5ioK2DGyObdxh3ATIIKnbhm4EhCp1cfgQmogHd58.
 >     Are you sure you want to continue connecting (yes/no/[fingerprint])?
 
 This is not ideal as the user must manually compare the fingerprint of the
 warning with the one provided by the admin. So instead it is preferable to add
 the key before the first connection using the following command:
 
-    echo club1.fr,128.78.51.131 ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBBC64tjZ1WjxMMoGeWiipApfCAaQe1sP/YFoNWYtckXV7XfFFKsBf70SHUw/oPjVZ1sdwcIL8wsH8Q00oYMIv7M= >> ~/.ssh/known_hosts
+    echo club1.fr ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBFQJRiEKM9iywtuvjLD7Wvp6F7VqM6ocuc0Q05LGKU6 >> ~/.ssh/known_hosts
 
 If for some reason the manual comparison is preferred, the fingerprint in the above example is indeed the fingerprint of club1.fr.
 
