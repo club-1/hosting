@@ -26,7 +26,7 @@ softwares like [FileZilla](https://filezilla-project.org/download.php?type=clien
 
 The FTP server is configured to only accept TLS connections. This is to avoid
 passwords beeing sent in cleartext. This feature is referred to as
-[FTPES](https://en.wikipedia.org/wiki/FTPS#Explicit).
+[FTPS (FTP over implicit TLS)](https://en.wikipedia.org/wiki/FTPS#Implicit).
 
 A certificate is also used to prove the authenticity of the server key.
 If prompted for a certificate approval, it is important to check that it is
@@ -34,11 +34,12 @@ issued by `Let's Encrypt`.
 
 ### Connection informations
 
-| field            | value      |
-| ---------------- | ---------- |
-| host             | `club1.fr` |
-| port             | `2121`     |
-| authentication   | `Normal`   |
+| field            | value           |
+|------------------|-----------------|
+| host             | `club1.fr`      |
+| port             | `990` (default) |
+| encryption       | `Implicit TLS`  |
+| authentication   | `Normal`        |
 
 ## Web
 
@@ -55,10 +56,10 @@ following address: <http://club1.fr/phpmyadmin>
 
 ### Connection informations
 
-| field            | value       |
-| ---------------- | ----------- |
-| host             | `localhost` |
-| port             | `3306`      |
+| field            | value            |
+|------------------|------------------|
+| host             | `localhost`      |
+| port             | `3306` (default) |
 
 ## SSH
 
@@ -105,10 +106,10 @@ server to be able to use it as an authentication method.
 
 ### Connection informations
 
-| field            | value      |
-| ---------------- | ---------- |
-| host             | `club1.fr` |
-| port             | `22`       |
+| field            | value          |
+|------------------|----------------|
+| host             | `club1.fr`     |
+| port             | `22` (default) |
 
 
 # Requests and Problems
