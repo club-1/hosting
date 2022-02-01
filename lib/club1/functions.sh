@@ -187,30 +187,18 @@ subdomainDel() {
 }
 
 phpfpmpoolAdd() {
-	if [ -n $1 ]; then
-		local file="/etc/php/$phpversion/fpm/pool.d/$login.conf"
-		verbose "creating fpm pool for '$login'"
-		if [ ! -f $file ]; then
-			sed -e "s#\${user}#$login#" "$DIR/../../share/club1/fpm-pool.conf" > $file
-		fi
-		systemctl restart "php$phpversion-fpm"
+	local file="/etc/php/$phpversion/fpm/pool.d/$login.conf"
+	verbose "creating fpm pool for '$login'"
+	if [ ! -f $file ]; then
+		sed -e "s#\${user}#$login#" "$DIR/../../share/club1/fpm-pool.conf" > $file
 	fi
+	systemctl restart "php$phpversion-fpm"
 }
 
 phpfpmpoolDel() {
-	if [ -n $1 ]; then
-		verbose "deleting fpm pool for '$login'"
-		rm "/etc/php/$phpversion/fpm/pool.d/$login.conf"
-		systemctl restart "php$phpversion-fpm"
-	fi
-}
-
-filemanagerAdd() {
-	phpfpmpoolAdd "files.club1.fr-$login"
-}
-
-filemanagerDel() {
-	phpfpmpoolDel "files.club1.fr-$login"
+	verbose "deleting fpm pool for '$login'"
+	rm "/etc/php/$phpversion/fpm/pool.d/$login.conf"
+	systemctl restart "php$phpversion-fpm"
 }
 
 vhostAdd() {
@@ -234,7 +222,6 @@ vhostAdd() {
 			verbose "'$subdir' does not exist, creating it"
 			sudo -u $login mkdir -p $subdir
 		fi
-		phpfpmpoolAdd $domain
 		sed -e "s#\${domain}#$domain#" -e "s#\${email}#$email#" -e "s#\${subdir}#$subdir#" -e "s#\${user}#$login#" "$DIR/../../share/club1/vhost-default.conf" >"/etc/apache2/sites-available/$domain.conf"
 		a2ensite -q "$domain.conf"
 		systemctl reload apache2
@@ -245,16 +232,12 @@ vhostDel() {
 	if [ -n $1 ]; then
 		local domain="$(cut -d : -f1 <<<$1)"
 		local dir="$(cut -d : -f2 <<<$1)"
-		local domainle="$domain-le-ssl"
 		confirm "delete virtualhost '$domain'"
-		a2dissite $domainle
 		a2dissite $domain
-		rm "/etc/apache2/sites-available/$domainle.conf"
 		rm "/etc/apache2/sites-available/$domain.conf"
 		rm "/home/$login/$dir/error.log"
 		rm "/home/$login/$dir/access.log"
 		systemctl reload apache2
-#		phpfpmpoolDel $domain
 	fi
 }
 
