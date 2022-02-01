@@ -10,11 +10,12 @@ usage() {
 	echo "  -h    Show help."
 	echo "  -s    With shell."
 	echo "  -m    With MariaDb MySql account."
+	echo "  -f    With FPM pool."
 	echo "  -q    Quiet."
 	exit 0
 }
 
-optstring="hsmq"
+optstring="hsmfq"
 
 tryRoot
 parse $optstring $@
@@ -27,5 +28,6 @@ ldapadduser $login $login $nextuid
 
 [[ -n ${options[s]} ]] && shellAdd
 [[ -n ${options[m]} ]] && sqlUserAdd
+[[ -n ${options[f]} ]] && phpfpmpoolAdd
 
 exit 0
