@@ -21,11 +21,12 @@ then
 	confirm
 	rm -rf $dir
 	tar -xf $tar
-	cp config.json $dir/
+	ln -s ../config.json $dir/config.json
 	rm -f current
 	ln -s $dir current
 	if [ $cur != $dir ]
 	then
+		diff --color -u $cur/config.sample.json $dir/config.sample.json
 		rm -rf $cur
 	fi
 	echo success
