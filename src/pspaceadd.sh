@@ -25,6 +25,9 @@ verbose "create user $login"
 nextuid=$(ldapnextuid)
 ldapaddgroup $login $nextuid
 ldapadduser $login $login $nextuid
+mkhomedir_helper $login
+chgrp home /home/$login
+chmod 750 /home/$login
 
 [[ -n ${options[s]} ]] && shellAdd
 [[ -n ${options[m]} ]] && sqlUserAdd
