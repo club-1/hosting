@@ -6,22 +6,24 @@ then
 	exit -1
 fi
 
+# Split domain into parts.
+IFS='.' read -r -a parts <<< "$CERTBOT_DOMAIN"
+
+TLD=${parts[-1]}
+SLD=${parts[-2]}
+DOMAIN="$SLD.$TLD"
+
 HOST="_acme-challenge"
-ZONE="/etc/bind/db.$CERTBOT_DOMAIN"
-DATE=$(date +%Y%m%d%H)
+ZONE="/etc/bind/db.$DOMAIN"
 
+# Strip validation record for this challenge.
+sed $ZONE -Ei -e "/^$HOST.*$CERTBOT_VALIDATION/d"
+dns-bump $ZONE
 
+# If it is the last, reload bind and send mail.
 if [[ $CERTBOT_REMAINING_CHALLENGES == 0 ]]
 then
-	sed $ZONE -Ei -e "/^$HOST.*$VALIDATION/d"
-	dns-bump $ZONE
 	rndc reload
 	systemctl restart bind9
+	printf "Result for $CERTBOT_DOMAIN:\n$CERTBOT_AUTH_OUTPUT" | mailx -s "Certbot renewal result for $CERTBOT_DOMAIN" root
 fi
-
-printf "Result for $CERTBOT_DOMAIN\n
-validation:	$CERTBOT_VALIDATION
-remaining:	$CERTBOT_REMAINING_CHALLENGES
-output:
-$CERTBOT_AUTH_OUTPUT
-" | mailx -s "Certbot renewal result for $CERTBOT_DOMAIN" root
