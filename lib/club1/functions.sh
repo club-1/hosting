@@ -247,7 +247,7 @@ vhostDel() {
 siteAdd() {
 	if [ -n $1 ]; then
 		local domain="$1"
-		sleep 30
+		sleepProgress 30
 		certbot certonly --non-interactive --nginx -d "$domain"
 		sed -e "s#\${domain}#$domain#" "$DIR/../../share/club1/nginx-site.conf" >"/etc/nginx/sites-available/$domain.conf"
 		ln -s "/etc/nginx/sites-available/$domain.conf" "/etc/nginx/sites-enabled"
@@ -274,6 +274,13 @@ domainLevel() {
 	echo ${#dots}
 }
 
+sleepProgress() {
+	for i in $(seq $*); do
+		sleep 1
+		printf ' .'
+	done
+	echo
+}
 
 ### Other functions
 
