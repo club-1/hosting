@@ -231,7 +231,6 @@ vhostAdd() {
 vhostDel() {
 	if [ -n $1 ]; then
 		local domain="$(cut -d : -f1 <<<$1)"
-		local level=$(domainLevel $domain)
 		local dir="$(cut -d : -f2 <<<$1)"
 		confirm "delete virtualhost '$domain'"
 		a2dissite $domain
@@ -239,7 +238,7 @@ vhostDel() {
 		rm "/home/$login/$dir/error.log"
 		rm "/home/$login/$dir/access.log"
 		systemctl reload apache2
-		if [[ $level -ge 3 ]]; then
+		if [ -f "/etc/nginx/sites-available/$domain.conf" ]; then
 			siteDel "$domain"
 		fi
 	fi
