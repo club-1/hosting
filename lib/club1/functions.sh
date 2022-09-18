@@ -69,6 +69,10 @@ verbose() {
 	[[ -n ${options[v]} || -z ${options[q]} ]] && echo $*
 }
 
+passgen() {
+	openssl rand -base64 12
+}
+
 ### pspace functions
 
 loginGet() {

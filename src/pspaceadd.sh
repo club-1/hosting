@@ -8,6 +8,7 @@ usage() {
 	echo ""
 	echo "Options:"
 	echo "  -h    Show help."
+	echo "  -a    Ask for password."
 	echo "  -s    With shell."
 	echo "  -m    With MariaDb MySql account."
 	echo "  -f    With FPM pool."
@@ -15,11 +16,13 @@ usage() {
 	exit 0
 }
 
-optstring="hsmfq"
+optstring="hasmfq"
 
 tryRoot
 parse $optstring $@
 loginGet
+
+[[ -n ${options[a]} ]] || export PASSWORDGEN=passgen
 
 verbose "create user $login"
 nextuid=$(ldapnextuid)
