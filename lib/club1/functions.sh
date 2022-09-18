@@ -204,16 +204,16 @@ phpfpmpoolDel() {
 vhostAdd() {
 	if [ -n $1 ]; then
 		local domain="$(cut -d : -f1 <<<$1)"
+		local level=$(domainLevel $domain)
 		local top=$(getTopDomain $domain)
 		local dir="$(cut -d : -f2 <<<$1)"
 		local subdir="/home/$login/$dir"
-		if [ ! -z $top ]; then
-			echo this is a subdomain of $top
-			if [ -d /etc/letsencrypt/live/$top ]; then
-				echo will use already existing certificates for this domain
-			fi
-		fi
 		confirm "creating virtualhost '$domain' on '$subdir'"
+		if [[ $level -lt 3 ]] && [ -d /etc/letsencrypt/live/$top ]; then
+			echo using already existing certificates for parent domain $top
+		else
+			siteAdd "$domain"
+		fi
 		if [ -f $subdir ]; then
 			verbose "'$subdir' is a file, making a backup"
 			sudo -u $login mv $subdir $subdir.bak
@@ -231,6 +231,7 @@ vhostAdd() {
 vhostDel() {
 	if [ -n $1 ]; then
 		local domain="$(cut -d : -f1 <<<$1)"
+		local level=$(domainLevel $domain)
 		local dir="$(cut -d : -f2 <<<$1)"
 		confirm "delete virtualhost '$domain'"
 		a2dissite $domain
@@ -238,11 +239,40 @@ vhostDel() {
 		rm "/home/$login/$dir/error.log"
 		rm "/home/$login/$dir/access.log"
 		systemctl reload apache2
+		if [[ $level -ge 3 ]]; then
+			siteDel "$domain"
+		fi
+	fi
+}
+
+siteAdd() {
+	if [ -n $1 ]; then
+		local domain="$1"
+		sleep 30
+		certbot certonly --non-interactive --nginx -d "$domain"
+		sed -e "s#\${domain}#$domain#" "$DIR/../../share/club1/nginx-site.conf" >"/etc/nginx/sites-available/$domain.conf"
+		ln -s "/etc/nginx/sites-available/$domain.conf" "/etc/nginx/sites-enabled"
+		systemctl reload nginx
+	fi
+}
+
+siteDel() {
+	if [ -n $1 ]; then
+		local domain="$1"
+		rm "/etc/nginx/sites-enabled/$domain.conf"
+		rm "/etc/nginx/sites-available/$domain.conf"
+		systemctl reload nginx
+		certbot delete --non-interactive --cert-name "$1"
 	fi
 }
 
 getTopDomain() {
 	echo $1 | sed -nE 's/^.+\.(.+\..+)$/\1/p'
+}
+
+domainLevel() {
+	local dots=${1//[^.]}
+	echo ${#dots}
 }
 
 
