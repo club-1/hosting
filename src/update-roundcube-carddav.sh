@@ -11,6 +11,8 @@ dir=carddav
 tar=$dir-$tag.tar.gz
 url=https://github.com/$repo/releases/download/$tag
 
+confirm "update $repo to $tag"
+
 cd $cwd
 
 wget -nv $url/$tar
