@@ -110,6 +110,13 @@ groupUpdate() {
 	ldaprenamegroup $login $loginnew
 }
 
+removeFromAllGroups() {
+	grep ":.*$login" /etc/group | cut -d: -f1 | while read group
+	do
+		deluser "$login" "$group"
+	done
+}
+
 passwordSet() {
 	local login=$1
 	if [ $# -gt 1 ]; then

@@ -8,10 +8,10 @@ usage() {
 	echo ""
 	echo "Options:"
 	echo "  -h    Show help."
-	echo "  -r    Keep home directory"
-	echo "  -m    Keep MariaDb MySql account."
-	echo "  -f    Keep FPM pool"
 	echo "  -g    Keep group."
+	echo "  -r    Keep home directory."
+	echo "  -m    Keep MariaDb MySql account."
+	echo "  -f    Keep FPM pool."
 	echo "  -q    Quiet."
 	exit 0
 }
@@ -24,10 +24,11 @@ loginGet
 
 verbose "userdel $login"
 ldapdeleteuser $login
+removeFromAllGroups
 
+[[ -z ${options[g]} ]] && groupDel
 [[ -z ${options[r]} ]] && homeDel
 [[ -z ${options[m]} ]] && sqlUserDel
 [[ -z ${options[f]} ]] && phpfpmpoolDel
-[[ -z ${options[g]} ]] && groupDel
 
 exit 0
