@@ -146,15 +146,15 @@ shellDel() {
 sqlUserAdd() {
 	verbose "creating MySql user '$login@localhost' identified via PAM and grant privileges"
 	mysql -u root -e "
-		CREATE USER $login@localhost IDENTIFIED VIA pam;
-		GRANT ALL PRIVILEGES ON \`$login\_%\` . * TO '$login'@'localhost';
+		CREATE USER \`$login\`@localhost IDENTIFIED VIA pam;
+		GRANT ALL PRIVILEGES ON \`$login\_%\` . * TO \`$login\`@localhost;
 		INSERT INTO phpmyadmin.pma__users (username, usergroup) VALUES ('$login', '$pma_usergroup');"
 }
 
 sqlUserDel() {
 	verbose "deleting MySql user '$login@localhost'"
 	mysql -u root -e "
-		DROP USER IF EXISTS $login@localhost;
+		DROP USER IF EXISTS \`$login\`@localhost;
 		DELETE FROM phpmyadmin.pma__users WHERE username = '$login';"
 }
 
