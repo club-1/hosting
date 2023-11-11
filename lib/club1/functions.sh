@@ -83,6 +83,7 @@ loginUpdate() {
 	sqlUserUpdate $loginnew
 	verbose "updating UNIX user '$login' into '$loginnew'"
 	ldaprenameuser $login $loginnew
+	nscd --invalidate passwd
 }
 
 homeDel() {
@@ -97,17 +98,20 @@ homeUpdate() {
 	ldapmodifyuser $login <<< "changetype: modify
 		replace: homeDirectory
 		homeDirectory: /home/$loginnew" > /dev/null
+	nscd --invalidate passwd
 }
 
 groupDel() {
 	verbose "deleting group '$login'"
 	ldapdeletegroup $login
+	nscd --invalidate group
 }
 
 groupUpdate() {
 	local loginnew=$1
 	verbose "updating group '$login' into '$loginnew'"
 	ldaprenamegroup $login $loginnew
+	nscd --invalidate group
 }
 
 removeFromAllGroups() {
@@ -134,6 +138,7 @@ shellAdd() {
 	ldapmodifyuser $login <<< "changetype: modify
 		replace: loginShell
 		loginShell: /bin/bash" > /dev/null
+	nscd --invalidate passwd
 }
 
 shellDel() {
@@ -141,6 +146,7 @@ shellDel() {
 	ldapmodifyuser $login <<< "changetype: modify
 		replace: loginShell
 		loginShell: /bin/false" > /dev/null
+	nscd --invalidate passwd
 }
 
 sqlUserAdd() {
