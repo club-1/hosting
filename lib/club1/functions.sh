@@ -203,8 +203,8 @@ phpfpmpoolAdd() {
 	verbose "creating fpm pool for '$login'"
 	if [ ! -f $file ]; then
 		sed -e "s#\${user}#$login#" "$DIR/../../share/club1/fpm-pool.conf" > $file
-		git -C /etc add $file
-		git -C /etc commit -m "web: add PHP FPM pool for $login"
+		etckeeper vcs add $file
+		etckeeper commit -m "web: add PHP FPM pool for $login"
 	fi
 	systemctl restart "php$phpversion-fpm"
 }
@@ -212,8 +212,8 @@ phpfpmpoolAdd() {
 phpfpmpoolDel() {
 	verbose "deleting fpm pool for '$login'"
 	rm "/etc/php/$phpversion/fpm/pool.d/$login.conf"
-	git -C /etc add $file
-	git -C /etc commit -m "web: add PHP FPM pool for $login"
+	etckeeper vcs add $file
+	etckeeper commit -m "web: add PHP FPM pool for $login"
 	systemctl restart "php$phpversion-fpm"
 }
 
