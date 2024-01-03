@@ -251,8 +251,6 @@ vhostDel() {
 		confirm "delete virtualhost '$domain'"
 		a2dissite $domain
 		rm "/etc/apache2/sites-available/$domain.conf"
-		rm "/home/$login/$dir/error.log"
-		rm "/home/$login/$dir/access.log"
 		systemctl reload apache2
 		if [ -f "/etc/nginx/sites-available/$domain.conf" ]; then
 			siteDel "$domain"
