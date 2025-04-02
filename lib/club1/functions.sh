@@ -206,7 +206,7 @@ phpfpmpoolAdd() {
 		etckeeper vcs add $file
 		etckeeper commit -m "web: add PHP FPM pool for $login"
 	fi
-	systemctl restart "php$phpversion-fpm"
+	systemctl restart "php$phpversion-fpm prometheus-phpfpm-exporter"
 }
 
 phpfpmpoolDel() {
