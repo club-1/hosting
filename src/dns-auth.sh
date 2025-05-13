@@ -29,7 +29,6 @@ dns-bump $ZONE
 
 if [[ $CERTBOT_REMAINING_CHALLENGES == 0 ]]
 then
-	rndc reload
-	systemctl restart bind9
+	systemctl reload named
 	sleep 300
 fi

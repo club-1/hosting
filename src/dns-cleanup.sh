@@ -23,7 +23,6 @@ dns-bump $ZONE
 # If it is the last, reload bind and send mail.
 if [[ $CERTBOT_REMAINING_CHALLENGES == 0 ]]
 then
-	rndc reload
-	systemctl restart bind9
+	systemctl reload named
 	printf "Result for $CERTBOT_DOMAIN:\n$CERTBOT_AUTH_OUTPUT" | mailx -s "Certbot renewal result for $CERTBOT_DOMAIN" root
 fi
