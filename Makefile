@@ -9,7 +9,7 @@ SHARE_DIR   := $(DESTDIR)$(PREFIX)/share/club1
 DIRS        := $(BIN_DIR) $(LIB_DIR) $(ETC_DIR) $(SHARE_DIR)
 
 # File lists
-BIN_LIST    := dns-auth dns-bump dns-cleanup pspaceadd pspacedel pspacemod update-apache update-php update-element update-roundcube-carddav update-ipv4 update-ipv6 move-logs
+BIN_LIST    := dns-auth dns-bump dns-cleanup pspaceadd pspacedel pspacemod update-apache update-php update-element update-roundcube-carddav update-ipv4 update-ipv6 move-logs matrixinvite
 LIB_LIST    := functions.sh dns-bump.pl
 ETC_LIST    := config
 
