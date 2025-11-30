@@ -33,4 +33,6 @@ chmod 750 /home/$login
 [[ -n ${options[m]} ]] && sqlUserAdd
 [[ -n ${options[f]} ]] && phpfpmpoolAdd
 
+compta-ajouter -c adhesion -m +35 -i "adhésion $login" -y
+
 exit 0
