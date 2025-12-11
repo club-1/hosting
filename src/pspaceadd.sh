@@ -34,5 +34,6 @@ chmod 750 /home/$login
 [[ -n ${options[f]} ]] && phpfpmpoolAdd
 
 compta-ajouter -c adhesion -m +35 -i "adhésion $login" -y
+echo "$login" >> /var/compta/user-contacts.tsv
 
 exit 0
