@@ -241,6 +241,7 @@ vhostAdd() {
 		sed -e "s#\${domain}#$domain#" -e "s#\${email}#$email#" -e "s#\${subdir}#$subdir#" -e "s#\${user}#$login#" "$DIR/../../share/club1/vhost-default.conf" >"/etc/apache2/sites-available/$domain.conf"
 		a2ensite -q "$domain.conf"
 		systemctl reload apache2
+		etckeeper commit -m "wed: add $domain for $login"
 	fi
 }
 
@@ -255,6 +256,7 @@ vhostDel() {
 		if [ -f "/etc/nginx/sites-available/$domain.conf" ]; then
 			siteDel "$domain"
 		fi
+		etckeeper commit -m "wed: del $domain of $login"
 	fi
 }
 
