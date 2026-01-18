@@ -4,12 +4,37 @@
 
 set -e
 
+# print usage and exit
+usage () {
+    cat <<'EOF'
+Send a Matrix invitation token by email.
+
+Usage: matrixinvite [EMAIL_ADDRESS]
+
+Email address can be provided as first argument,
+otherwise, it will be asked interactively.
+  
+  --help, -h		print this help
+
+Source code: <https://github.com/club-1/hosting/blob/master/src/matrixinvite.sh>
+Club1 doc: <https://club1.fr/docs/fr/services/matrix.html#commande-matrixinvite>
+EOF
+	exit 0
+}
+
+
+
 if test -z "$1"
 then
 	echo 'mail address ?'
 	read mailAddr
 else
-	mailAddr="$1"
+	if [ "$1" = '--help' ] || [ "$1" = '-h' ]
+	then
+		usage
+	else
+		mailAddr="$1"
+	fi
 fi
 
 jsonToken=$(matrixtoken -j)
