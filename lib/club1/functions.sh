@@ -224,7 +224,12 @@ vhostAdd() {
 		local top=$(getTopDomain $domain)
 		local dir="$(cut -d : -f2 <<<$1)"
 		local subdir="/home/$login/$dir"
+		local logdir="/home/$login/log"
 		confirm "creating virtualhost '$domain' on '$subdir'"
+		if [ ! -d $logdir ]; then
+			mkdir -p -m 750 $logdir
+			chown $login:$login $logdir
+		fi
 		if [[ $level -lt 3 ]] && [ -d /etc/letsencrypt/live/$top ]; then
 			echo using already existing certificates for parent domain $top
 		else
