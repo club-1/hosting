@@ -152,7 +152,7 @@ shellDel() {
 sqlUserAdd() {
 	verbose "creating MySql user '$login@localhost' identified via PAM and grant privileges"
 	mysql -u root -e "
-		CREATE USER \`$login\`@localhost IDENTIFIED VIA pam;
+		CREATE USER \`$login\`@localhost IDENTIFIED VIA unix_socket OR pam;
 		GRANT ALL PRIVILEGES ON \`$login\_%\` . * TO \`$login\`@localhost;
 		INSERT INTO phpmyadmin.pma__users (username, usergroup) VALUES ('$login', '$pma_usergroup');"
 }
