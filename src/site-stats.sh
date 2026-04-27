@@ -1,7 +1,7 @@
 #!/bin/sh -e
 
 # default path inside users's static folder
-default="tmp/stats"
+default="site-stats"
 
 usage () {
 	 cat <<'EOF'
@@ -13,7 +13,7 @@ Usage: DOMAIN [PATH]
 
 If no PATH is provided, it will use the default path:
 
-	~/static/tmp/stats/
+	~/static/site-stats/
 
 Output file name is: DOMAIN.html
 
