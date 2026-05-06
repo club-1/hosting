@@ -151,7 +151,7 @@ shellDel() {
 
 sqlUserAdd() {
 	verbose "creating MySql user '$login@localhost' identified via PAM and grant privileges"
-	mysql -u root -e "
+	mariadb -u root -e "
 		CREATE USER \`$login\`@localhost IDENTIFIED VIA unix_socket OR pam;
 		GRANT ALL PRIVILEGES ON \`$login\_%\` . * TO \`$login\`@localhost;
 		INSERT INTO phpmyadmin.pma__users (username, usergroup) VALUES ('$login', '$pma_usergroup');"
@@ -159,15 +159,15 @@ sqlUserAdd() {
 
 sqlUserDel() {
 	verbose "deleting MySql user '$login@localhost'"
-	mysql -u root -e "
+	mariadb -u root -e "
 		DROP USER IF EXISTS \`$login\`@localhost;
 		DELETE FROM phpmyadmin.pma__users WHERE username = '$login';"
 }
 
 sqlUserUpdate() {
 	local loginnew=$1
-	# nbuser=$(mysql -u root -e 'select user from mysql.user' | grep -sw $login | wc -l)
-	mysql -u root -e "
+	# nbuser=$(mariadb -u root -e 'select user from mysql.user' | grep -sw $login | wc -l)
+	mariadb -u root -e "
 		UPDATE mysql.user SET User = '$loginnew' WHERE Host = 'localhost' AND User = '$login';
 		UPDATE phpmyadmin.pma__users SET username = '$loginnew' WHERE username = '$login';"
 }
